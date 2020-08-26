@@ -1,10 +1,11 @@
 package org.ft.server.resource;
 
 import lombok.AllArgsConstructor;
-import org.ft.core.models.FeatureToggle;
+import org.ft.core.api.model.FeatureInfo;
+import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.request.FeatureTogglesRequest;
 import org.ft.core.response.FeatureToggleResponse;
-import org.ft.server.service.FeatureToggleService;
+import org.ft.core.services.FeatureDataStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,26 +24,33 @@ import java.util.List;
 @RequestMapping("/features")
 public class FeatureToggleResource
 {
-    private FeatureToggleService ftService;
+    private FeatureDataStore ftService;
 
     @PostMapping
-    public FeatureToggle createOrUpdateFeatureToggles (@RequestBody FeatureToggle featureToggle, @PathParam("appName") String appName) {
-        return ftService.createOrUpdateFeatureToggle(featureToggle, appName);
+    public FeatureInfo createOrUpdateFeatureToggles (@RequestBody FeatureInfo featureInfo)
+    {
+        return ftService.create(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 
     @PostMapping("/bulk")
-    public FeatureToggleResponse createOrUpdateFeatureToggles (@RequestBody FeatureTogglesRequest request, @PathParam("appName") String appName) {
-        List<FeatureToggle> featureToggles = ftService.createOrUpdateFeatureToggles(request, appName);
-        return FeatureToggleResponse.builder().featureToggles(featureToggles).build();
+    public FeatureToggleResponse createOrUpdateFeatureToggles (@RequestBody FeatureTogglesRequest request,
+                                                               @PathParam("appName") String appName)
+    {
+        return FeatureToggleResponse.builder().features(ftService.create(request.getFeatures())).build();
     }
 
     @GetMapping
-    public List<FeatureToggle> getAllFeatureToggles(@PathParam("appName") String appName) {
-        return ftService.getAllFeatureToggle(appName);
+    public List<FeatureInfo> getAllFeatureToggles (@PathParam("tenant") String tenant)
+    {
+        return ftService.getFeatures(tenant);
     }
 
     @GetMapping("/{featureName}")
-    public FeatureToggle getFeatureToggle (@PathVariable String featureName, @PathParam("appName") String appName) {
-        return ftService.getFeatureToggle(featureName, appName);
+    public FeatureInfo getFeatureToggle (@PathVariable String featureName,
+                                         @PathParam("tenant") String tenant)
+    {
+        return ftService.getFeature(
+            featureName,
+            tenant).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 }

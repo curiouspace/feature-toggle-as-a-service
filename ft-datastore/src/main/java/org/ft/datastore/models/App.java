@@ -1,4 +1,4 @@
-package org.ft.core.models;
+package org.ft.datastore.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -18,11 +16,7 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientApp implements Serializable
+public class App extends BaseEntity implements Serializable
 {
-    @Id
-    @GeneratedValue
-    private long id;
-
     private String name;
 }

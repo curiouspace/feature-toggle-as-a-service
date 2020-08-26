@@ -10,6 +10,7 @@
 		<module>ft-client-spring-boot-starter</module>
 		<module>ft-samples</module>
 		<module>ft-server-ui</module>
+		<module>ft-datastore</module>
 	</modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>

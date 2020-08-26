@@ -1,7 +1,7 @@
 package org.ft.client.service;
 
-import org.ft.client.config.FeatureToggleConfigProperties;
-import org.ft.core.models.FeatureToggle;
+import org.ft.client.config.FeatureProperties;
+import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.request.FeatureTogglesRequest;
 import org.ft.core.response.FeatureToggleResponse;
 import lombok.AllArgsConstructor;
@@ -20,51 +20,51 @@ import java.util.Map;
 @AllArgsConstructor
 public class FeatureToggleService
 {
-    private FeatureToggleConfigProperties props;
+    private FeatureProperties props;
 
-    private Map<String, FeatureToggle> cacheMap = new HashMap<>();
+    private Map<String, FeatureInfo> cacheMap = new HashMap<>();
 
-    public void cache(List<FeatureToggle> toggles) {
+    public void cache(List<FeatureInfo> toggles) {
         toggles.forEach(d -> cacheMap.put(d.getName(), d));
     }
 
-    public FeatureToggle getFeatureToggle (String featureName) {
+    public FeatureInfo getFeatureToggle (String featureName) {
         if(cacheMap.get(featureName) == null) {
-            FeatureToggle featureToggle = getFeatureStatusFromService(featureName);
+            FeatureInfo featureToggle = getFeatureStatusFromService(featureName);
             cacheMap.put(featureToggle.getName(), featureToggle);
             return featureToggle;
         }
         return cacheMap.get(featureName);
     }
 
-    public FeatureToggleResponse registerAppAndFeatureToggles (List<FeatureToggle> features)
+    public FeatureToggleResponse registerAppAndFeatureToggles (List<FeatureInfo> features)
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        final String baseUrl = props.getUrl() + "/features/bulk?appName={appName}";
+        final String baseUrl = props.getUrl() + "/features/bulk";
 
         ResponseEntity<FeatureToggleResponse> result = restTemplate.postForEntity(
             baseUrl,
-            FeatureTogglesRequest.builder().featureToggles(features).build(),
+            FeatureTogglesRequest.builder().features(features).build(),
             FeatureToggleResponse.class,
             props.getAppName());
 
         FeatureToggleResponse response = result.getBody();
         if(response != null) {
-            cache(response.getFeatureToggles());
+            cache(response.getFeatures());
         }
         return response;
     }
 
-    public FeatureToggle getFeatureStatusFromService (String featureName)
+    public FeatureInfo getFeatureStatusFromService (String featureName)
     {
         RestTemplate restTemplate = new RestTemplate();
 
         final String baseUrl = props.getUrl() + "/features/" + featureName + "?appName={appName}";
 
-        ResponseEntity<FeatureToggle> result = restTemplate.getForEntity(
+        ResponseEntity<FeatureInfo> result = restTemplate.getForEntity(
             baseUrl,
-            FeatureToggle.class,
+            FeatureInfo.class,
             props.getAppName());
 
         return result.getBody();

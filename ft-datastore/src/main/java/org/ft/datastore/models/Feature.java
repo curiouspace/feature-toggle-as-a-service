@@ -1,13 +1,13 @@
-package org.ft.core.models;
+package org.ft.datastore.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ft.core.api.model.Phase;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
@@ -19,16 +19,15 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureToggle implements Serializable
+public class Feature extends BaseEntity implements Serializable
 {
-    @Id
-    @GeneratedValue
-    private long id;
-
     private String name;
+    private String description;
+    private String groupName;
+    @Enumerated
+    private Phase phase;
     private boolean enabled;
 
     @ManyToOne
-    private ClientApp appName;
-    private String description;
+    private App app;
 }

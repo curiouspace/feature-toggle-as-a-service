@@ -1,11 +1,11 @@
 package org.ft.client.config;
 
+import lombok.AllArgsConstructor;
 import org.ft.client.annotations.Feature;
 import org.ft.client.annotations.FeatureToggles;
 import org.ft.client.service.FeatureToggleService;
-import org.ft.core.models.ClientApp;
-import org.ft.core.models.FeatureToggle;
-import lombok.AllArgsConstructor;
+import org.ft.core.api.model.FeatureInfo;
+import org.ft.core.services.TenantIdentifierService;
 import org.reflections.Reflections;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Prajwal Das
@@ -23,35 +24,42 @@ import java.util.Set;
 @AllArgsConstructor
 public class FeatureToggleConfigurationListener implements ApplicationListener<ContextRefreshedEvent>
 {
-    private FeatureToggleConfigProperties props;
+    private FeatureProperties props;
 
     private FeatureToggleService featureToggleService;
+
+    private TenantIdentifierService tenantIdentifierService;
 
     @Override
     public void onApplicationEvent (ContextRefreshedEvent contextRefreshedEvent)
     {
         Reflections reflections = new Reflections(props.getPackageScan());
         Set<Class<?>> featuredClasses = reflections.getTypesAnnotatedWith(FeatureToggles.class);
-        List<FeatureToggle> allFeatures = new ArrayList<>();
+        List<FeatureInfo> allFeatures = new ArrayList<>();
+        List<String> tenants = tenantIdentifierService.getTenantIdentifiers();
         for (Class<?> fc : featuredClasses) {
             Field[] feature = fc.getFields();
 
             for (int i = 0; i < feature.length; i++) {
                 Feature ann = feature[i].getAnnotation(Feature.class);
                 if (ann != null) {
-                    allFeatures.add(createFeature(ann));
+                    allFeatures.addAll(createFeature(ann, tenants));
                 }
             }
         }
         featureToggleService.registerAppAndFeatureToggles(allFeatures);
     }
 
-    private FeatureToggle createFeature(Feature feature)
+    private List<FeatureInfo> createFeature (Feature feature, List<String> tenants)
     {
-        return FeatureToggle.builder()
+        return tenants.stream().map(tenant -> FeatureInfo.builder()
             .name(feature.name())
+            .groupName(feature.group())
+            .phase(feature.phase())
             .enabled(feature.value())
-            .appName(ClientApp.builder().name(props.getAppName()).build())
-            .description(feature.description()).build();
+            .appName(props.getAppName())
+            .tenantIdentifier(tenant)
+            .description(feature.description()).build())
+            .collect(Collectors.toList());
     }
 }

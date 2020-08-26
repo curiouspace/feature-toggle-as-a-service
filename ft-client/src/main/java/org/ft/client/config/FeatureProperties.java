@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties(prefix = "spring.feature-toggle")
-public class FeatureToggleConfigProperties
+public class FeatureProperties
 {
     private String url;
     private String packageScan;

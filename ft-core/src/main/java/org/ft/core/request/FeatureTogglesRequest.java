@@ -1,8 +1,10 @@
 package org.ft.core.request;
 
-import org.ft.core.models.FeatureToggle;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.ft.core.api.model.FeatureInfo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,16 +14,9 @@ import java.util.List;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FeatureTogglesRequest implements Serializable
 {
-    private List<FeatureToggle> featureToggles;
-
-    public FeatureTogglesRequest () {
-
-    }
-
-    public FeatureTogglesRequest (List<FeatureToggle> featureToggles) {
-        this.featureToggles = featureToggles;
-    }
-
+    private List<FeatureInfo> features;
 }

@@ -9,12 +9,12 @@ import org.ft.client.annotations.FeatureToggles;
 @FeatureToggles
 public enum SampleFeatures
 {
-    @Feature(name = "SAMPLE_FEATURE_001", description = "Demo Desc")
+    @Feature(name = "SAMPLE_FEATURE_001", description = "Demo Desc", group = "F1")
     SAMPLE_FEATURE_001,
 
-    @Feature(name = "SAMPLE_FEATURE_002", value = true, description = "Demo Desc")
+    @Feature(name = "SAMPLE_FEATURE_002", value = true, description = "Demo Desc", group = "F2")
     SAMPLE_FEATURE_002,
 
-    @Feature(name = "SAMPLE_FEATURE_003", description = "Demo Desc")
+    @Feature(name = "SAMPLE_FEATURE_003", description = "Demo Desc", group = "F2")
     SAMPLE_FEATURE_003,
 }
