@@ -1,5 +1,6 @@
 package org.ft.core.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Builder
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class ClientApp implements Serializable
 {
     @Id
