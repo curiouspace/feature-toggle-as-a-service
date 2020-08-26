@@ -1,4 +1,4 @@
-package org.ft.server.exceptions;
+package org.ft.core.exceptions;
 
 /**
  * @author Prajwal Das

@@ -2,7 +2,7 @@ package org.ft.server.service;
 
 import lombok.AllArgsConstructor;
 import org.ft.core.models.ClientApp;
-import org.ft.server.exceptions.FeatureToggleException;
+import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.server.repository.ClientAppRepository;
 import org.springframework.stereotype.Service;
 

@@ -43,7 +43,7 @@ public class FeatureToggleConfigurationListener implements ApplicationListener<C
                 }
             }
         }
-        featureToggleService.syncFeatureToggles(allFeatures);
+        featureToggleService.registerAppAndFeatureToggles(allFeatures);
     }
 
     private FeatureToggle createFeature(Feature feature)

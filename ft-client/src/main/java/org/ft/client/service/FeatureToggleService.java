@@ -37,7 +37,7 @@ public class FeatureToggleService
         return cacheMap.get(featureName);
     }
 
-    public FeatureToggleResponse syncFeatureToggles(List<FeatureToggle> features)
+    public FeatureToggleResponse registerAppAndFeatureToggles (List<FeatureToggle> features)
     {
         RestTemplate restTemplate = new RestTemplate();
 
