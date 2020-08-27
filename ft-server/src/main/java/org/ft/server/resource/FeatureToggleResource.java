@@ -6,14 +6,15 @@ import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.request.FeatureTogglesRequest;
 import org.ft.core.response.FeatureToggleResponse;
 import org.ft.core.services.FeatureDataStore;
+import org.ft.core.services.TenantIdentifierService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -33,35 +34,34 @@ public class FeatureToggleResource
     }
 
     @PostMapping("/bulk")
-    public FeatureToggleResponse createFeatures (@RequestBody FeatureTogglesRequest request,
-                                                @PathParam("appName") String appName)
+    public FeatureToggleResponse createFeatures (@RequestBody FeatureTogglesRequest request)
     {
         return FeatureToggleResponse.builder().features(ftService.create(request.getFeatures())).build();
     }
 
     @GetMapping
-    public List<FeatureInfo> getAllFeatureForTenant (@PathParam("tenant") String tenant)
+    public List<FeatureInfo> getAllFeatureForTenant (@RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         return ftService.getFeatures(tenant);
     }
 
     @GetMapping("/{featureName}/enable")
     public void getEnableFeatureToggle (@PathVariable String featureName,
-                                        @PathParam("tenant") String tenant)
+                                        @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         ftService.enable(featureName, tenant);
     }
 
     @GetMapping("/{featureName}/disable")
     public void getDisableFeatureToggle (@PathVariable String featureName,
-                                         @PathParam("tenant") String tenant)
+                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         ftService.disable(featureName, tenant);
     }
 
     @GetMapping("/{featureName}")
     public FeatureInfo getFeatureToggle (@PathVariable String featureName,
-                                         @PathParam("tenant") String tenant)
+                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         return ftService.getFeature(
             featureName,

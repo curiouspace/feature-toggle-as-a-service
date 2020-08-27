@@ -7,5 +7,6 @@ import java.util.List;
  */
 public interface TenantIdentifierService
 {
+    String DEFAULT= "DEFAULT";
     List<String> getTenantIdentifiers();
 }
