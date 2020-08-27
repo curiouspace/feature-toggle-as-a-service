@@ -27,22 +27,36 @@ public class FeatureToggleResource
     private FeatureDataStore ftService;
 
     @PostMapping
-    public FeatureInfo createOrUpdateFeatureToggles (@RequestBody FeatureInfo featureInfo)
+    public FeatureInfo createFeature (@RequestBody FeatureInfo featureInfo)
     {
         return ftService.create(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 
     @PostMapping("/bulk")
-    public FeatureToggleResponse createOrUpdateFeatureToggles (@RequestBody FeatureTogglesRequest request,
-                                                               @PathParam("appName") String appName)
+    public FeatureToggleResponse createFeatures (@RequestBody FeatureTogglesRequest request,
+                                                @PathParam("appName") String appName)
     {
         return FeatureToggleResponse.builder().features(ftService.create(request.getFeatures())).build();
     }
 
     @GetMapping
-    public List<FeatureInfo> getAllFeatureToggles (@PathParam("tenant") String tenant)
+    public List<FeatureInfo> getAllFeatureForTenant (@PathParam("tenant") String tenant)
     {
         return ftService.getFeatures(tenant);
+    }
+
+    @GetMapping("/{featureName}/enable")
+    public void getEnableFeatureToggle (@PathVariable String featureName,
+                                        @PathParam("tenant") String tenant)
+    {
+        ftService.enable(featureName, tenant);
+    }
+
+    @GetMapping("/{featureName}/disable")
+    public void getDisableFeatureToggle (@PathVariable String featureName,
+                                         @PathParam("tenant") String tenant)
+    {
+        ftService.disable(featureName, tenant);
     }
 
     @GetMapping("/{featureName}")

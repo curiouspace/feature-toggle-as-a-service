@@ -1,8 +1,8 @@
 package org.ft.client.service;
 
+import lombok.AllArgsConstructor;
 import org.ft.client.annotations.Feature;
 import org.ft.client.exception.ParsingFeatureEnumFailed;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

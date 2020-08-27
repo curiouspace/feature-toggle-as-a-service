@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -17,6 +18,7 @@ public interface AppRepository extends JpaRepository<App, Long>
     Optional<App> findByName (String name);
 
     @Modifying
+    @Transactional
     @Query("update App a set a.active = false where a.name = :appName")
     Optional<App> deactivateApp (String appName);
 }

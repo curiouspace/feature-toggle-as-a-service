@@ -1,10 +1,10 @@
 package org.ft.client.service;
 
+import lombok.AllArgsConstructor;
 import org.ft.client.config.FeatureProperties;
 import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.request.FeatureTogglesRequest;
 import org.ft.core.response.FeatureToggleResponse;
-import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
