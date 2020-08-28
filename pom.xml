@@ -4,13 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-		<module>ft-server</module>
-		<module>ft-client</module>
         <module>ft-core</module>
-		<module>ft-client-spring-boot-starter</module>
-		<module>ft-samples</module>
-		<module>ft-server-ui</module>
 		<module>ft-datastore</module>
+		<module>ft-client</module>
+		<module>ft-client-spring-boot-starter</module>
+		<module>ft-server-ui</module>
+		<module>ft-samples</module>
+		<module>ft-server</module>
 	</modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>

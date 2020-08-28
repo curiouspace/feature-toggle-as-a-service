@@ -25,4 +25,6 @@ public interface FeatureDataStore
     Optional<FeatureInfo> update(FeatureInfo feature);
 
     void delete(String featureName);
+
+    List<String> getAllTenantsIdentifiers ();
 }

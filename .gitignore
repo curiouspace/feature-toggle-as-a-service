@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /.idea/
+/ft-server-ui/src/main/resources/static/

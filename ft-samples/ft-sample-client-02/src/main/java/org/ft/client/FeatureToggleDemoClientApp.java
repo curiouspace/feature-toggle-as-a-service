@@ -1,4 +1,4 @@
-package org.ft.samples.client;
+package org.ft.client;
 
 import org.ft.client.annotations.EnableFeatureToggleClient;
 import org.ft.core.services.TenantIdentifierService;
@@ -14,10 +14,10 @@ import java.util.List;
  */
 @SpringBootApplication
 @EnableFeatureToggleClient
-public class FeatureToggleSampleClientApp
+public class FeatureToggleDemoClientApp
 {
 	public static void main(String[] args) {
-		SpringApplication.run(FeatureToggleSampleClientApp.class, args);
+		SpringApplication.run(FeatureToggleDemoClientApp.class, args);
 	}
 }
 
@@ -28,6 +28,6 @@ class MultiTenantService implements TenantIdentifierService
 	@Override
 	public List<String> getTenantIdentifiers ()
 	{
-		return Arrays.asList("Cu01", "Cu02");
+		return Arrays.asList("Cu01", "Cu02", "Cu03");
 	}
 }

@@ -61,4 +61,10 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     {
         throw new NotImplementedException();
     }
+
+    @Override
+    public List<String> getAllTenantsIdentifiers ()
+    {
+        throw new NotImplementedException();
+    }
 }

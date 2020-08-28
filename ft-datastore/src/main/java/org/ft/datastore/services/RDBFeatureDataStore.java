@@ -111,6 +111,12 @@ public class RDBFeatureDataStore implements FeatureDataStore
         featureRepository.deactivateFeature(featureName);
     }
 
+    @Override
+    public List<String> getAllTenantsIdentifiers ()
+    {
+        return featureStatusRepository.getAllTenantIdentifiers();
+    }
+
     private Feature mapper (FeatureInfo feature, App app)
     {
         Feature f = Feature.builder().name(feature.getName()).description(feature.getDescription()).enabled(

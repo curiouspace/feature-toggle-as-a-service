@@ -40,23 +40,41 @@ public class FeatureToggleResource
     }
 
     @GetMapping
-    public List<FeatureInfo> getAllFeatureForTenant (@RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
+    public List<FeatureInfo> getAllFeatureForTenant (@RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant )
     {
         return ftService.getFeatures(tenant);
     }
 
-    @GetMapping("/{featureName}/enable")
+    @PostMapping("/{featureName}/{status}")
+    public void setFeatureStatus (@PathVariable String featureName,
+                                  @PathVariable Boolean status,
+                                  @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
+    {
+        if(status) {
+            ftService.enable(featureName, tenant);
+        } else {
+            ftService.disable(featureName, tenant);
+        }
+    }
+
+    @PostMapping("/{featureName}/enable")
     public void getEnableFeatureToggle (@PathVariable String featureName,
                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         ftService.enable(featureName, tenant);
     }
 
-    @GetMapping("/{featureName}/disable")
+    @PostMapping("/{featureName}/disable")
     public void getDisableFeatureToggle (@PathVariable String featureName,
                                          @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         ftService.disable(featureName, tenant);
+    }
+
+    @GetMapping("/tenants")
+    public List<String> getAllTenantsIdentifiers ()
+    {
+        return ftService.getAllTenantsIdentifiers();
     }
 
     @GetMapping("/{featureName}")

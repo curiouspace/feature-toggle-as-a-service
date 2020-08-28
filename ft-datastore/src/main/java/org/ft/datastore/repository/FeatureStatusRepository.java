@@ -17,6 +17,9 @@ public interface FeatureStatusRepository extends JpaRepository<FeatureStatus, Lo
     @Query("Select f from FeatureStatus f where f.feature.name = :featureName and f.tenantIdentifier = :tenantIdentifier")
     Optional<FeatureStatus> getFeatureStatus (String featureName, String tenantIdentifier);
 
-    @Query("Select f from FeatureStatus f where f.tenantIdentifier = :tenantIdentifier")
+    @Query("Select f from FeatureStatus f where f.tenantIdentifier = :tenantIdentifier order by f.feature.app.name, f.feature.name")
     List<FeatureStatus> getFeatureStatus (String tenantIdentifier);
+
+    @Query("Select distinct f.tenantIdentifier from FeatureStatus f where f.active = true order by f.tenantIdentifier")
+    List<String> getAllTenantIdentifiers ();
 }

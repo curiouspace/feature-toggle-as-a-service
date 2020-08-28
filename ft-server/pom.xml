@@ -39,6 +39,11 @@
             <artifactId>ft-datastore</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>org.ft</groupId>
+            <artifactId>ft-server-ui</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>
