@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
  * @author Prajwal Das
  */
@@ -22,4 +24,5 @@ public class FeatureInfo
     private Phase phase;
     private String appName;
     private String tenantIdentifier;
+    private LocalDate enableOn;
 }

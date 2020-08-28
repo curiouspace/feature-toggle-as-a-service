@@ -12,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -52,14 +53,21 @@ public class FeatureToggleConfigurationListener implements ApplicationListener<C
 
     private List<FeatureInfo> createFeature (Feature feature, List<String> tenants)
     {
-        return tenants.stream().map(tenant -> FeatureInfo.builder()
-            .name(feature.name())
-            .groupName(feature.group())
-            .phase(feature.phase())
-            .enabled(feature.value())
-            .appName(props.getAppName())
-            .tenantIdentifier(tenant)
-            .description(feature.description()).build())
+        return tenants.stream().map(tenant -> {
+            LocalDate enableOn = null;
+            if(!feature.enableOn().isEmpty()) {
+                enableOn = LocalDate.parse(feature.enableOn());
+            }
+            return FeatureInfo.builder()
+                .name(feature.name())
+                .groupName(feature.group())
+                .phase(feature.phase())
+                .enabled(feature.value())
+                .appName(props.getAppName())
+                .tenantIdentifier(tenant)
+                .enableOn(enableOn)
+                .description(feature.description()).build();
+        })
             .collect(Collectors.toList());
     }
 }

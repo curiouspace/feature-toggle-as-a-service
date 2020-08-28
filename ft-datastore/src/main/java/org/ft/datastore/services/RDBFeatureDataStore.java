@@ -119,9 +119,14 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private Feature mapper (FeatureInfo feature, App app)
     {
-        Feature f = Feature.builder().name(feature.getName()).description(feature.getDescription()).enabled(
-            feature.isEnabled()).groupName(feature.getGroupName()).phase(feature.getPhase()).app(
-            app).build();
+        Feature f = Feature.builder()
+            .name(feature.getName())
+            .description(feature.getDescription())
+            .enabled(feature.isEnabled())
+            .groupName(feature.getGroupName())
+            .phase(feature.getPhase())
+            .enableOn(feature.getEnableOn())
+            .app(app).build();
         f.setId(feature.getId());
         return f;
     }
@@ -129,9 +134,15 @@ public class RDBFeatureDataStore implements FeatureDataStore
     private FeatureInfo mapper (FeatureStatus featureStatus)
     {
         Feature feature = featureStatus.getFeature();
-        return FeatureInfo.builder().id(feature.getId()).name(feature.getName()).phase(
-            feature.getPhase()).appName(feature.getApp().getName()).description(feature.getDescription()).enabled(
-            featureStatus.isEnabled()).tenantIdentifier(featureStatus.getTenantIdentifier()).groupName(
-            feature.getGroupName()).build();
+        return FeatureInfo.builder()
+            .id(feature.getId())
+            .name(feature.getName())
+            .phase(feature.getPhase())
+            .appName(feature.getApp().getName())
+            .description(feature.getDescription())
+            .enabled(featureStatus.isEnabled())
+            .tenantIdentifier(featureStatus.getTenantIdentifier())
+            .enableOn(featureStatus.getFeature().getEnableOn())
+            .groupName(feature.getGroupName()).build();
     }
 }

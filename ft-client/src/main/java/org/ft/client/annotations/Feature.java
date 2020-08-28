@@ -11,13 +11,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * @author Prajwal Das
  */
-@Target({ ElementType.FIELD})
+@Target({ ElementType.FIELD })
 @Retention(RUNTIME)
 public @interface Feature
 {
+    String name ();
+
     String description () default "";
-    String name () default "";
+
     String group () default "";
-    Phase phase () default Phase.DEVELOPMENT;
+
+    Phase phase () default Phase.DEV;
+
     boolean value () default false;
+
+    String enableOn () default "";
 }

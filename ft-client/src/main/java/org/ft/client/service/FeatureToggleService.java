@@ -60,12 +60,13 @@ public class FeatureToggleService
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        final String baseUrl = props.getUrl() + "/features/" + featureName + "?appName={appName}";
+        final String baseUrl = props.getUrl() + "/features/" + featureName + "?appName={appName}&phase={phase}";
 
         ResponseEntity<FeatureInfo> result = restTemplate.getForEntity(
             baseUrl,
             FeatureInfo.class,
-            props.getAppName());
+            props.getAppName(),
+            props.getDeploymentPhase());
 
         return result.getBody();
     }

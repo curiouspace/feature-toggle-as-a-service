@@ -5,6 +5,6 @@ package org.ft.core.api.model;
  */
 public enum Phase
 {
-    DEVELOPMENT,
-    PRODUCTION
+    DEV,
+    PROD
 }
