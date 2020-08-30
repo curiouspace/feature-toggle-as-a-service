@@ -45,7 +45,7 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public List<FeatureInfo> create (List<FeatureInfo> features)
+    public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)
     {
         throw new NotImplementedException();
     }

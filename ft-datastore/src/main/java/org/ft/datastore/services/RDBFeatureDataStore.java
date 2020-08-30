@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.services.FeatureDataStore;
+import org.ft.core.services.FeaturePropertyValidator;
 import org.ft.datastore.models.App;
 import org.ft.datastore.models.Feature;
 import org.ft.datastore.models.FeatureStatus;
 import org.ft.datastore.repository.FeatureStatusRepository;
 import org.ft.datastore.repository.FeatureToggleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,9 @@ public class RDBFeatureDataStore implements FeatureDataStore
     private FeatureStatusRepository featureStatusRepository;
 
     private RDBAppDataStore rdbAppDataStore;
+
+    @Autowired
+    private FeaturePropertyValidator featurePropertyValidator;
 
     @Override
     public void enable (String featureName, String tenant)
@@ -58,7 +63,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public Optional<FeatureInfo> create (FeatureInfo feature)
     {
-        if (feature.getAppName() == null || feature.getAppName().isEmpty()) {
+        if ( !featurePropertyValidator.isValid(feature)) {
             throw FeatureToggleException.APP_NOT_REGISTERED;
         }
 
@@ -69,7 +74,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public List<FeatureInfo> create (List<FeatureInfo> features)
+    public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)
     {
         return features.stream().map(this::create).filter(Optional::isPresent).map(
             Optional::get).collect(Collectors.toList());

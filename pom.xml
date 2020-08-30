@@ -26,5 +26,6 @@
 	<properties>
 		<revision>0.0.1-SNAPSHOT</revision>
 		<java.version>1.8</java.version>
+		<apache.version>3.11</apache.version>
 	</properties>
 </project>

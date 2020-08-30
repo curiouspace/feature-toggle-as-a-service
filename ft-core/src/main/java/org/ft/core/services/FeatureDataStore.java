@@ -20,7 +20,7 @@ public interface FeatureDataStore
 
     Optional<FeatureInfo> create(FeatureInfo feature);
 
-    List<FeatureInfo> create (List<FeatureInfo> features);
+    List<FeatureInfo> createOrUpdate (List<FeatureInfo> features);
 
     Optional<FeatureInfo> update(FeatureInfo feature);
 
