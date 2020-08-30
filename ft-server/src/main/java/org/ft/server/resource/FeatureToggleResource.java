@@ -36,7 +36,7 @@ public class FeatureToggleResource
     @PostMapping("/bulk")
     public FeatureToggleResponse createFeatures (@RequestBody FeatureTogglesRequest request)
     {
-        return FeatureToggleResponse.builder().features(ftService.create(request.getFeatures())).build();
+        return FeatureToggleResponse.builder().features(ftService.createOrUpdate(request.getFeatures())).build();
     }
 
     @GetMapping
