@@ -78,7 +78,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public Optional<FeatureInfo> update (FeatureInfo feature)
     {
-        if (feature.getId() == 0) {
+        if (feature.getId() != null && !feature.getId().isEmpty()) {
             throw FeatureToggleException.FEATURE_NOT_FOUND;
         }
         return create(feature);
@@ -98,11 +98,19 @@ public class RDBFeatureDataStore implements FeatureDataStore
     public Feature createIfMissing (FeatureInfo feature, App app)
     {
         Optional<Feature> f = featureRepository.findByName(feature.getName());
-        return f.orElseGet(() -> {
-            Feature fn = mapper(feature, app);
+        Feature fn;
+        if(f.isPresent()) {
+            fn = f.get();
+            fn.setEnabled(feature.isEnabled());
+            fn.setDescription(feature.getDescription());
+            fn.setEnableOn(feature.getEnableOn());
+            fn.setGroupName(feature.getGroupName());
+            fn.setPhase(feature.getPhase());
+        } else {
+            fn = mapper(feature, app);
             fn.setActive(true);
-            return featureRepository.save(fn);
-        });
+        }
+        return featureRepository.save(fn);
     }
 
     @Override

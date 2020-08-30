@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class FeatureInfo
 {
-    private long id;
+    private String id;
     private String name;
     private boolean enabled;
     private String description;

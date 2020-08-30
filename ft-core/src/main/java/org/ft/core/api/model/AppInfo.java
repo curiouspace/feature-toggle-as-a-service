@@ -16,6 +16,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class AppInfo implements Serializable
 {
-    private long id;
+    private String id;
     private String name;
 }

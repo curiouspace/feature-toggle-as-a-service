@@ -54,7 +54,7 @@ public class RDBAppDataStore implements AppDataStore
     @Override
     public Optional<AppInfo> update (AppInfo app)
     {
-        if (app == null || app.getId() == 0) {
+        if (app == null || app.getId() == null) {
             throw FeatureToggleException.APP_NOT_REGISTERED;
         }
         return create(app);
