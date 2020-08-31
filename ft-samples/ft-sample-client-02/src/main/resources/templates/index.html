@@ -9,11 +9,11 @@
     <body>
         <div class="container my-5">
             <div class="header">
-                <h3>Client App 001</h3>
+                <h3>Client App 002</h3>
             </div>
             <div th:switch="${featureToggles}" class="feature-content">
                 <div class="ft-card" th:if="${feature.enabled}" th:each="feature : ${featureToggles}">
-                    <span class="content" th:text="${feature.id}">userName</span>
+                    <span class="content" th:text="${feature.id}"></span>
                 </div>
             </div>
         </div>
