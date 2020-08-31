@@ -40,9 +40,9 @@ public class FeatureToggleResource
     }
 
     @GetMapping
-    public List<FeatureInfo> getAllFeatureForTenant (@RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant )
+    public FeatureToggleResponse getAllFeatureForTenant (@RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant )
     {
-        return ftService.getFeatures(tenant);
+        return FeatureToggleResponse.builder().features(ftService.getFeatures(tenant)).build();
     }
 
     @PostMapping("/{featureId}/{status}")

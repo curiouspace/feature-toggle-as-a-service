@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FeatureToggleConfigurationListener implements ApplicationListener<ContextRefreshedEvent>
 {
-    private FeatureProperties props;
+    private FeatureClientProperties props;
 
     private FeatureToggleService featureToggleService;
 

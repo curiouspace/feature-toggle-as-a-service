@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="container my-5">
+    <h3 class="header">Client 001</h3>
+    <div class="card">
+        <div th:switch="${featureToggles}" class="container my-5">
+            <div class="col-md-10">
+                <h2 th:case="null">No Features yet!</h2>
+                <div th:case="*">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Deployment Phase</th>
+                            <th>Group Name</th>
+                            <th>Enabled</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="feature : ${featureToggles}">
+                            <td th:text="${feature.id}"></td>
+                            <td th:text="${feature.name}"></td>
+                            <td th:text="${feature.phase}"></td>
+                            <td th:text="${feature.groupName}"></td>
+                            <td th:text="${feature.enabled}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

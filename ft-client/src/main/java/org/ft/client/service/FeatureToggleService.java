@@ -1,7 +1,7 @@
 package org.ft.client.service;
 
 import lombok.AllArgsConstructor;
-import org.ft.client.config.FeatureProperties;
+import org.ft.client.config.FeatureClientProperties;
 import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.request.FeatureTogglesRequest;
 import org.ft.core.response.FeatureToggleResponse;
@@ -20,7 +20,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class FeatureToggleService
 {
-    private FeatureProperties props;
+    private FeatureClientProperties props;
 
     private Map<String, FeatureInfo> cacheMap = new HashMap<>();
 
@@ -35,6 +35,21 @@ public class FeatureToggleService
             return featureToggle;
         }
         return cacheMap.get(featureId);
+    }
+
+    public FeatureToggleResponse getAllFeatureToggles (String tenant) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        final String baseUrl = props.getUrl() + "/features?tenant={tenant}&appName={appName}&phase={phase}";
+
+        ResponseEntity<FeatureToggleResponse> result = restTemplate.getForEntity(
+            baseUrl,
+            FeatureToggleResponse.class,
+            tenant,
+            props.getAppName(),
+            props.getDeploymentPhase());
+
+        return result.getBody();
     }
 
     public FeatureToggleResponse registerAppAndFeatureToggles (List<FeatureInfo> features)
