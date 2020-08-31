@@ -5,12 +5,10 @@ import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.services.FeatureDataStore;
 import org.ft.core.services.FeaturePropertyValidator;
-import org.ft.datastore.models.App;
 import org.ft.datastore.models.Feature;
 import org.ft.datastore.models.FeatureStatus;
 import org.ft.datastore.repository.FeatureStatusRepository;
 import org.ft.datastore.repository.FeatureToggleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,28 +26,25 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private FeatureStatusRepository featureStatusRepository;
 
-    private RDBAppDataStore rdbAppDataStore;
-
-    @Autowired
     private FeaturePropertyValidator featurePropertyValidator;
 
     @Override
-    public void enable (String featureName, String tenant)
+    public void enable (String featureId, String tenant)
     {
-        featureRepository.updateFeatureStatus(featureName, tenant, true);
+        featureRepository.updateFeatureStatus(featureId, tenant, true);
     }
 
     @Override
-    public void disable (String featureName, String tenant)
+    public void disable (String featureId, String tenant)
     {
-        featureRepository.updateFeatureStatus(featureName, tenant, false);
+        featureRepository.updateFeatureStatus(featureId, tenant, false);
     }
 
     @Override
-    public Optional<FeatureInfo> getFeature (String featureName, String tenant)
+    public Optional<FeatureInfo> getFeature (String featureId, String tenant)
     {
         return Optional.ofNullable(mapper(featureStatusRepository.getFeatureStatus(
-            featureName,
+            featureId,
             tenant).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND)));
     }
 
@@ -67,8 +62,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
             throw FeatureToggleException.APP_NOT_REGISTERED;
         }
 
-        App app = rdbAppDataStore.createIfMissing(feature.getAppName());
-        Feature f = createOrUpdateFeature(feature, app);
+        Feature f = createIfMissing(feature);
         FeatureStatus featureStatus = createStatusIfMissing(feature, f);
         return Optional.ofNullable(mapper(featureStatus));
     }
@@ -91,7 +85,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     public FeatureStatus createStatusIfMissing (FeatureInfo info, Feature feature)
     {
-        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatus(feature.getName(), info.getTenantIdentifier());
+        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatus(feature.getId(), info.getTenantIdentifier());
         return f.orElseGet(() -> {
             FeatureStatus featureStatus = FeatureStatus.builder().enabled(info.isEnabled()).feature(
                 feature).tenantIdentifier(info.getTenantIdentifier()).build();
@@ -102,31 +96,30 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private Feature createOrUpdateFeature (FeatureInfo feature, App app)
     {
-        Optional<Feature> f = featureRepository.findByName(feature.getName());
+        Optional<Feature> f = featureRepository.findById(feature.getId());
         if(f.isPresent())
         {
             Feature featureToUpdate = f.get();
-            featureToUpdate.setApp(app);
             featureToUpdate.setName(feature.getName());
             featureToUpdate.setGroupName(feature.getGroupName());
             featureToUpdate.setEnableOn(feature.getEnableOn());
             featureToUpdate.setDescription(feature.getDescription());
             featureToUpdate.setPhase(feature.getPhase());
-            return featureRepository.save(featureToUpdate);
 
         }else
         {
-            Feature fn = mapper(feature, app);
+            Feature fn = mapper(feature);
             fn.setActive(true);
-            return featureRepository.save(fn);
         }
-
+        return featureRepository.save(fn);
     }
 
+
+
     @Override
-    public void delete (String featureName)
+    public void delete (String featureId)
     {
-        featureRepository.deactivateFeature(featureName);
+        featureRepository.deactivateFeature(featureId);
     }
 
     @Override
@@ -135,16 +128,15 @@ public class RDBFeatureDataStore implements FeatureDataStore
         return featureStatusRepository.getAllTenantIdentifiers();
     }
 
-    private Feature mapper (FeatureInfo feature, App app)
+    private Feature mapper (FeatureInfo feature)
     {
         Feature f = Feature.builder()
             .name(feature.getName())
             .description(feature.getDescription())
-            .enabled(feature.isEnabled())
             .groupName(feature.getGroupName())
             .phase(feature.getPhase())
-            .enableOn(feature.getEnableOn())
-            .app(app).build();
+            .dependsOn(feature.getDependsOn())
+            .enableOn(feature.getEnableOn()).build();
         f.setId(feature.getId());
         return f;
     }
@@ -156,11 +148,11 @@ public class RDBFeatureDataStore implements FeatureDataStore
             .id(feature.getId())
             .name(feature.getName())
             .phase(feature.getPhase())
-            .appName(feature.getApp().getName())
             .description(feature.getDescription())
             .enabled(featureStatus.isEnabled())
             .tenantIdentifier(featureStatus.getTenantIdentifier())
             .enableOn(featureStatus.getFeature().getEnableOn())
+            .dependsOn(featureStatus.getFeature().getDependsOn())
             .groupName(feature.getGroupName()).build();
     }
 }

@@ -14,10 +14,10 @@ import java.util.Optional;
 @Repository
 public interface FeatureStatusRepository extends JpaRepository<FeatureStatus, Long>
 {
-    @Query("Select f from FeatureStatus f where f.feature.name = :featureName and f.tenantIdentifier = :tenantIdentifier")
-    Optional<FeatureStatus> getFeatureStatus (String featureName, String tenantIdentifier);
+    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantIdentifier = :tenantIdentifier")
+    Optional<FeatureStatus> getFeatureStatus (String featureId, String tenantIdentifier);
 
-    @Query("Select f from FeatureStatus f where f.tenantIdentifier = :tenantIdentifier order by f.feature.app.name, f.feature.name")
+    @Query("Select f from FeatureStatus f where f.tenantIdentifier = :tenantIdentifier order by f.feature.id")
     List<FeatureStatus> getFeatureStatus (String tenantIdentifier);
 
     @Query("Select distinct f.tenantIdentifier from FeatureStatus f where f.active = true order by f.tenantIdentifier")

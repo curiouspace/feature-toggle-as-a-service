@@ -1,5 +1,6 @@
 package org.ft.client.config;
 
+import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import org.ft.client.annotations.Feature;
 import org.ft.client.annotations.FeatureToggles;
@@ -59,13 +60,13 @@ public class FeatureToggleConfigurationListener implements ApplicationListener<C
                 enableOn = LocalDate.parse(feature.enableOn());
             }
             return FeatureInfo.builder()
+                .id(feature.id())
                 .name(feature.name())
                 .groupName(feature.group())
                 .phase(feature.phase())
-                .enabled(feature.value())
-                .appName(props.getAppName())
                 .tenantIdentifier(tenant)
                 .enableOn(enableOn)
+                .dependsOn(Sets.newHashSet(feature.dependsOn()))
                 .description(feature.description()).build();
         })
             .collect(Collectors.toList());

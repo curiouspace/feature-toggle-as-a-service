@@ -25,29 +25,30 @@ public class FeatureToggleService
     private Map<String, FeatureInfo> cacheMap = new HashMap<>();
 
     public void cache(List<FeatureInfo> toggles) {
-        toggles.forEach(d -> cacheMap.put(d.getName(), d));
+        toggles.forEach(d -> cacheMap.put(d.getId(), d));
     }
 
-    public FeatureInfo getFeatureToggle (String featureName) {
-        if(cacheMap.get(featureName) == null) {
-            FeatureInfo featureToggle = getFeatureStatusFromService(featureName);
-            cacheMap.put(featureToggle.getName(), featureToggle);
+    public FeatureInfo getFeatureToggle (String featureId) {
+        if(cacheMap.get(featureId) == null) {
+            FeatureInfo featureToggle = getFeatureStatusFromService(featureId);
+            cacheMap.put(featureToggle.getId(), featureToggle);
             return featureToggle;
         }
-        return cacheMap.get(featureName);
+        return cacheMap.get(featureId);
     }
 
     public FeatureToggleResponse registerAppAndFeatureToggles (List<FeatureInfo> features)
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        final String baseUrl = props.getUrl() + "/features/bulk";
+        final String baseUrl = props.getUrl() + "/features/bulk" + "?appName={appName}&phase={phase}";
 
         ResponseEntity<FeatureToggleResponse> result = restTemplate.postForEntity(
             baseUrl,
             FeatureTogglesRequest.builder().features(features).build(),
             FeatureToggleResponse.class,
-            props.getAppName());
+            props.getAppName(),
+            props.getDeploymentPhase());
 
         FeatureToggleResponse response = result.getBody();
         if(response != null) {
@@ -56,11 +57,11 @@ public class FeatureToggleService
         return response;
     }
 
-    public FeatureInfo getFeatureStatusFromService (String featureName)
+    public FeatureInfo getFeatureStatusFromService (String featureId)
     {
         RestTemplate restTemplate = new RestTemplate();
 
-        final String baseUrl = props.getUrl() + "/features/" + featureName + "?appName={appName}&phase={phase}";
+        final String baseUrl = props.getUrl() + "/features/" + featureId + "?appName={appName}&phase={phase}";
 
         ResponseEntity<FeatureInfo> result = restTemplate.getForEntity(
             baseUrl,

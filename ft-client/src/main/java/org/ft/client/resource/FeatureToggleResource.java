@@ -19,9 +19,9 @@ public class FeatureToggleResource
 {
     private FeatureToggleService featureToggleService;
 
-    @GetMapping("/{featureName}")
-    public FeatureInfo getFeatureStatus(@PathVariable String featureName)
+    @GetMapping("/{featureId}")
+    public FeatureInfo getFeatureStatus(@PathVariable String featureId)
     {
-        return featureToggleService.getFeatureStatusFromService(featureName);
+        return featureToggleService.getFeatureStatusFromService(featureId);
     }
 }
