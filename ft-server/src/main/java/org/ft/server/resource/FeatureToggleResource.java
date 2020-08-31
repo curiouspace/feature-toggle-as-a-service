@@ -30,7 +30,7 @@ public class FeatureToggleResource
     @PostMapping
     public FeatureInfo createFeature (@RequestBody FeatureInfo featureInfo)
     {
-        return ftService.create(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
+        return ftService.createOrUpdate(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 
     @PostMapping("/bulk")

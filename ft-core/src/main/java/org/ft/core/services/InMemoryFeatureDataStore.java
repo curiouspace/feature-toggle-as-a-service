@@ -39,10 +39,11 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public Optional<FeatureInfo> create (FeatureInfo feature)
+    public Optional<FeatureInfo> createOrUpdate (FeatureInfo feature)
     {
-        throw new NotImplementedException();
+         throw new NotImplementedException();
     }
+
 
     @Override
     public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)

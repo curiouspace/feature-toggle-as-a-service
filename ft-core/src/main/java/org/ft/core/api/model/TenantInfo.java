@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
-/**
- * @author Prajwal Das
- */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class AppInfo implements Serializable
+@NoArgsConstructor
+public class TenantInfo
 {
     private String id;
+
     private String name;
+
 }

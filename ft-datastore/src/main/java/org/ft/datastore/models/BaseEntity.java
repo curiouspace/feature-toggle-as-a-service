@@ -3,6 +3,7 @@ package org.ft.datastore.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,8 +23,9 @@ import java.io.Serializable;
 public class BaseEntity implements Serializable
 {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
 
     private boolean active;
 }
