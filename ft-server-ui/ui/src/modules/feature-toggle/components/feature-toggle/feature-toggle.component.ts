@@ -27,8 +27,8 @@ export class FeatureToggleComponent implements OnInit {
 
   tenantSelected(tenant) {
     console.log(tenant.value);
-    this.featureToggleService.getFeaturesForTenant(tenant.value).subscribe(res => {
-      this.features = res;
+    this.featureToggleService.getFeaturesForTenant(tenant.value).subscribe((res: any) => {
+      this.features = res.features;
       this.selectedTenant = tenant.value;
       this.dataSource = new MatTableDataSource(this.features);
     });

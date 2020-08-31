@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+</head>
+    <body>
+        <div class="container my-5">
+            <div class="header">
+                <h3>Client App 001</h3>
+            </div>
+            <div th:switch="${featureToggles}" class="feature-content">
+                <div class="ft-card" th:if="${feature.enabled}" th:each="feature : ${featureToggles}">
+                    <span class="content" th:text="${feature.id}">userName</span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
