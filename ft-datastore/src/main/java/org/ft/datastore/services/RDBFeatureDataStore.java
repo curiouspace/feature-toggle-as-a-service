@@ -29,22 +29,22 @@ public class RDBFeatureDataStore implements FeatureDataStore
     private FeaturePropertyValidator featurePropertyValidator;
 
     @Override
-    public void enable (String featureName, String tenant)
+    public void enable (String featureId, String tenant)
     {
-        featureRepository.updateFeatureStatus(featureName, tenant, true);
+        featureRepository.updateFeatureStatus(featureId, tenant, true);
     }
 
     @Override
-    public void disable (String featureName, String tenant)
+    public void disable (String featureId, String tenant)
     {
-        featureRepository.updateFeatureStatus(featureName, tenant, false);
+        featureRepository.updateFeatureStatus(featureId, tenant, false);
     }
 
     @Override
-    public Optional<FeatureInfo> getFeature (String featureName, String tenant)
+    public Optional<FeatureInfo> getFeature (String featureId, String tenant)
     {
         return Optional.ofNullable(mapper(featureStatusRepository.getFeatureStatus(
-            featureName,
+            featureId,
             tenant).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND)));
     }
 
@@ -85,7 +85,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     public FeatureStatus createStatusIfMissing (FeatureInfo info, Feature feature)
     {
-        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatus(feature.getName(), info.getTenantIdentifier());
+        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatus(feature.getId(), info.getTenantIdentifier());
         return f.orElseGet(() -> {
             FeatureStatus featureStatus = FeatureStatus.builder().enabled(info.isEnabled()).feature(
                 feature).tenantIdentifier(info.getTenantIdentifier()).build();
@@ -96,7 +96,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     public Feature createIfMissing (FeatureInfo feature)
     {
-        Optional<Feature> f = featureRepository.findByName(feature.getName());
+        Optional<Feature> f = featureRepository.findById(feature.getId());
         Feature fn;
         if(f.isPresent()) {
             fn = f.get();
@@ -113,9 +113,9 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public void delete (String featureName)
+    public void delete (String featureId)
     {
-        featureRepository.deactivateFeature(featureName);
+        featureRepository.deactivateFeature(featureId);
     }
 
     @Override

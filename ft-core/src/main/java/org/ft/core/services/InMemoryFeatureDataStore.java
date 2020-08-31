@@ -13,19 +13,19 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
 {
 
     @Override
-    public void enable (String featureName, String tenant)
+    public void enable (String featureId, String tenant)
     {
         throw new NotImplementedException();
     }
 
     @Override
-    public void disable (String featureName, String tenant)
+    public void disable (String featureId, String tenant)
     {
         throw new NotImplementedException();
     }
 
     @Override
-    public Optional<FeatureInfo> getFeature (String featureName, String tenant)
+    public Optional<FeatureInfo> getFeature (String featureId, String tenant)
     {
         throw new NotImplementedException();
     }
@@ -55,7 +55,7 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public void delete (String featureName)
+    public void delete (String featureId)
     {
         throw new NotImplementedException();
     }
