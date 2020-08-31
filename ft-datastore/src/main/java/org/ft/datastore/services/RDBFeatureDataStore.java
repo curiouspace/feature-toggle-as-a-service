@@ -5,12 +5,10 @@ import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.services.FeatureDataStore;
 import org.ft.core.services.FeaturePropertyValidator;
-import org.ft.datastore.models.App;
 import org.ft.datastore.models.Feature;
 import org.ft.datastore.models.FeatureStatus;
 import org.ft.datastore.repository.FeatureStatusRepository;
 import org.ft.datastore.repository.FeatureToggleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +26,6 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private FeatureStatusRepository featureStatusRepository;
 
-    private RDBAppDataStore rdbAppDataStore;
-
-    @Autowired
     private FeaturePropertyValidator featurePropertyValidator;
 
     @Override
@@ -67,8 +62,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
             throw FeatureToggleException.APP_NOT_REGISTERED;
         }
 
-        App app = rdbAppDataStore.createIfMissing(feature.getAppName());
-        Feature f = createIfMissing(feature, app);
+        Feature f = createIfMissing(feature);
         FeatureStatus featureStatus = createStatusIfMissing(feature, f);
         return Optional.ofNullable(mapper(featureStatus));
     }
@@ -100,19 +94,19 @@ public class RDBFeatureDataStore implements FeatureDataStore
         });
     }
 
-    public Feature createIfMissing (FeatureInfo feature, App app)
+    public Feature createIfMissing (FeatureInfo feature)
     {
         Optional<Feature> f = featureRepository.findByName(feature.getName());
         Feature fn;
         if(f.isPresent()) {
             fn = f.get();
-            fn.setEnabled(feature.isEnabled());
             fn.setDescription(feature.getDescription());
             fn.setEnableOn(feature.getEnableOn());
             fn.setGroupName(feature.getGroupName());
+            fn.setDependsOn(feature.getDependsOn());
             fn.setPhase(feature.getPhase());
         } else {
-            fn = mapper(feature, app);
+            fn = mapper(feature);
             fn.setActive(true);
         }
         return featureRepository.save(fn);
@@ -130,16 +124,15 @@ public class RDBFeatureDataStore implements FeatureDataStore
         return featureStatusRepository.getAllTenantIdentifiers();
     }
 
-    private Feature mapper (FeatureInfo feature, App app)
+    private Feature mapper (FeatureInfo feature)
     {
         Feature f = Feature.builder()
             .name(feature.getName())
             .description(feature.getDescription())
-            .enabled(feature.isEnabled())
             .groupName(feature.getGroupName())
             .phase(feature.getPhase())
-            .enableOn(feature.getEnableOn())
-            .app(app).build();
+            .dependsOn(feature.getDependsOn())
+            .enableOn(feature.getEnableOn()).build();
         f.setId(feature.getId());
         return f;
     }
@@ -151,11 +144,11 @@ public class RDBFeatureDataStore implements FeatureDataStore
             .id(feature.getId())
             .name(feature.getName())
             .phase(feature.getPhase())
-            .appName(feature.getApp().getName())
             .description(feature.getDescription())
             .enabled(featureStatus.isEnabled())
             .tenantIdentifier(featureStatus.getTenantIdentifier())
             .enableOn(featureStatus.getFeature().getEnableOn())
+            .dependsOn(featureStatus.getFeature().getDependsOn())
             .groupName(feature.getGroupName()).build();
     }
 }

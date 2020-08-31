@@ -15,6 +15,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface Feature
 {
+    String id ();
+
     String name ();
 
     String description () default "";
@@ -23,7 +25,7 @@ public @interface Feature
 
     Phase phase () default Phase.DEV;
 
-    boolean value () default false;
-
     String enableOn () default "";
+
+    String[] dependsOn () default {};
 }
