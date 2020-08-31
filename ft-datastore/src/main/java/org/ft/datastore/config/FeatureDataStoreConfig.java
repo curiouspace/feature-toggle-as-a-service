@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableConfigurationProperties(FeatureDataStoreProperties.class)
-@ComponentScan("org.ft.datastore")
+@ComponentScan("org.ft")
 @EntityScan("org.ft.datastore")
 @EnableJpaRepositories("org.ft.datastore")
 public class FeatureDataStoreConfig

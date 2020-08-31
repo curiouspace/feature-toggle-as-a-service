@@ -1,7 +1,6 @@
 package org.ft.core.services;
 
 import org.ft.core.api.model.FeatureInfo;
-import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.Optional;
 /**
  * @author Prajwal Das
  */
-@Service
 public class InMemoryFeatureDataStore implements FeatureDataStore
 {
 

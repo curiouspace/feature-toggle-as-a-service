@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeatureStatus extends BaseEntity implements Serializable
+public class FeatureStatus extends IdEntity implements Serializable
 {
     @ManyToOne
     private Feature feature;

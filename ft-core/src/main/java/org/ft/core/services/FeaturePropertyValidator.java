@@ -3,8 +3,6 @@ package org.ft.core.services;
 import org.ft.core.api.model.FeatureInfo;
 import org.springframework.stereotype.Component;
 
-
-
 @Component
 public class FeaturePropertyValidator
 {
@@ -12,5 +10,4 @@ public class FeaturePropertyValidator
     {
         return featureInfo.validate();
     }
-
 }
