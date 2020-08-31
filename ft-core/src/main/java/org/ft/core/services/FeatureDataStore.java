@@ -1,6 +1,7 @@
 package org.ft.core.services;
 
 import org.ft.core.api.model.FeatureInfo;
+import org.ft.core.api.model.Phase;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +15,11 @@ public interface FeatureDataStore
 
     void disable(String featureId, String tenant);
 
-    Optional<FeatureInfo> getFeature(String featureId, String tenant);
+    Optional<FeatureInfo> getFeature (String featureId, String tenant, Phase phase);
 
-    List<FeatureInfo> getFeatures(String tenant);
+    List<FeatureInfo> getFeatures (String tenant, Phase phase);
 
-    Optional<FeatureInfo> create(FeatureInfo feature);
+    Optional<FeatureInfo> createOrUpdate (FeatureInfo feature);
 
     List<FeatureInfo> createOrUpdate (List<FeatureInfo> features);
 
