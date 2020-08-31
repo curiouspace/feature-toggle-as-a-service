@@ -61,14 +61,14 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public Optional<FeatureInfo> create (FeatureInfo feature)
+    public Optional<FeatureInfo> createOrUpdate (FeatureInfo feature)
     {
         if ( !featurePropertyValidator.isValid(feature)) {
             throw FeatureToggleException.APP_NOT_REGISTERED;
         }
 
         App app = rdbAppDataStore.createIfMissing(feature.getAppName());
-        Feature f = createIfMissing(feature, app);
+        Feature f = createOrUpdateFeature(feature, app);
         FeatureStatus featureStatus = createStatusIfMissing(feature, f);
         return Optional.ofNullable(mapper(featureStatus));
     }
@@ -76,7 +76,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)
     {
-        return features.stream().map(this::create).filter(Optional::isPresent).map(
+        return features.stream().map(this::createOrUpdate).filter(Optional::isPresent).map(
             Optional::get).collect(Collectors.toList());
     }
 
@@ -86,7 +86,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
         if (feature.getId() == 0) {
             throw FeatureToggleException.FEATURE_NOT_FOUND;
         }
-        return create(feature);
+        return createOrUpdate(feature);
     }
 
     public FeatureStatus createStatusIfMissing (FeatureInfo info, Feature feature)
@@ -100,14 +100,26 @@ public class RDBFeatureDataStore implements FeatureDataStore
         });
     }
 
-    public Feature createIfMissing (FeatureInfo feature, App app)
+    private Feature createOrUpdateFeature (FeatureInfo feature, App app)
     {
         Optional<Feature> f = featureRepository.findByName(feature.getName());
-        return f.orElseGet(() -> {
+        if(f.isPresent())
+        {
+            Feature featureToUpdate = f.get();
+            featureToUpdate.setApp(app);
+            featureToUpdate.setName(feature.getName());
+            featureToUpdate.setGroupName(feature.getGroupName());
+            featureToUpdate.setEnableOn(feature.getEnableOn());
+            featureToUpdate.setDescription(feature.getDescription());
+            return featureRepository.save(featureToUpdate);
+
+        }else
+        {
             Feature fn = mapper(feature, app);
             fn.setActive(true);
             return featureRepository.save(fn);
-        });
+        }
+
     }
 
     @Override

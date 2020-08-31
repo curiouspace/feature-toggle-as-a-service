@@ -18,7 +18,7 @@ public interface FeatureDataStore
 
     List<FeatureInfo> getFeatures(String tenant);
 
-    Optional<FeatureInfo> create(FeatureInfo feature);
+    Optional<FeatureInfo> createOrUpdate(FeatureInfo feature);
 
     List<FeatureInfo> createOrUpdate (List<FeatureInfo> features);
 
