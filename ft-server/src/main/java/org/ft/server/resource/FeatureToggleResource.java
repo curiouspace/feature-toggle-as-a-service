@@ -2,6 +2,7 @@ package org.ft.server.resource;
 
 import lombok.AllArgsConstructor;
 import org.ft.core.api.model.FeatureInfo;
+import org.ft.core.api.model.Phase;
 import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.request.FeatureTogglesRequest;
 import org.ft.core.response.FeatureToggleResponse;
@@ -30,7 +31,7 @@ public class FeatureToggleResource
     @PostMapping
     public FeatureInfo createFeature (@RequestBody FeatureInfo featureInfo)
     {
-        return ftService.create(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
+        return ftService.createOrUpdate(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 
     @PostMapping("/bulk")
@@ -40,9 +41,10 @@ public class FeatureToggleResource
     }
 
     @GetMapping
-    public FeatureToggleResponse getAllFeatureForTenant (@RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant )
+    public FeatureToggleResponse getAllFeatureForTenant (@RequestParam Phase phase,
+                                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
-        return FeatureToggleResponse.builder().features(ftService.getFeatures(tenant)).build();
+        return FeatureToggleResponse.builder().features(ftService.getFeatures(tenant, phase)).build();
     }
 
     @PostMapping("/{featureId}/{status}")
@@ -79,10 +81,12 @@ public class FeatureToggleResource
 
     @GetMapping("/{featureId}")
     public FeatureInfo getFeatureToggle (@PathVariable String featureId,
-                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
+                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant,
+                                         @RequestParam Phase phase)
     {
         return ftService.getFeature(
             featureId,
-            tenant).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
+            tenant,
+            phase).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 }
