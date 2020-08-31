@@ -14,7 +14,7 @@ export class FeatureToggleComponent implements OnInit {
   features: any = [];
   selectedTenant = '';
 
-  displayedColumns: string[] = ['name', 'description', 'groupName', 'phase', 'appName', 'enabled'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'groupName', 'phase', 'appName', 'enabled'];
   dataSource = new MatTableDataSource(this.features);
 
   constructor(private featureToggleService: FeatureToggleService) { }
@@ -36,7 +36,7 @@ export class FeatureToggleComponent implements OnInit {
 
   updateFeatureStatus(event, feature) {
     console.log(event.checked);
-    this.featureToggleService.updateFeatureStatus(event.checked, feature.name, this.selectedTenant).subscribe(res => {
+    this.featureToggleService.updateFeatureStatus(event.checked, feature.id, this.selectedTenant).subscribe(res => {
       feature.enabled = event.checked;
     });
   }

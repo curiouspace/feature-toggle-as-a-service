@@ -30,8 +30,9 @@ public class FeatureInfo
 
     public boolean validate()
     {
-        if (StringUtils.isEmpty(getName())
-            || StringUtils.isEmpty(getDescription())) {
+        if (StringUtils.isEmpty(getId()) || StringUtils.isEmpty(getName())
+            || StringUtils.isEmpty(getDescription()))
+        {
             return false;
         }
         else {

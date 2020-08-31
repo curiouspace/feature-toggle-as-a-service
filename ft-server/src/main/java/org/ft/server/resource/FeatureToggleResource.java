@@ -45,30 +45,30 @@ public class FeatureToggleResource
         return ftService.getFeatures(tenant);
     }
 
-    @PostMapping("/{featureName}/{status}")
-    public void setFeatureStatus (@PathVariable String featureName,
+    @PostMapping("/{featureId}/{status}")
+    public void setFeatureStatus (@PathVariable String featureId,
                                   @PathVariable Boolean status,
                                   @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         if(status) {
-            ftService.enable(featureName, tenant);
+            ftService.enable(featureId, tenant);
         } else {
-            ftService.disable(featureName, tenant);
+            ftService.disable(featureId, tenant);
         }
     }
 
-    @PostMapping("/{featureName}/enable")
-    public void getEnableFeatureToggle (@PathVariable String featureName,
+    @PostMapping("/{featureId}/enable")
+    public void getEnableFeatureToggle (@PathVariable String featureId,
                                         @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
-        ftService.enable(featureName, tenant);
+        ftService.enable(featureId, tenant);
     }
 
-    @PostMapping("/{featureName}/disable")
-    public void getDisableFeatureToggle (@PathVariable String featureName,
+    @PostMapping("/{featureId}/disable")
+    public void getDisableFeatureToggle (@PathVariable String featureId,
                                          @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
-        ftService.disable(featureName, tenant);
+        ftService.disable(featureId, tenant);
     }
 
     @GetMapping("/tenants")
@@ -77,12 +77,12 @@ public class FeatureToggleResource
         return ftService.getAllTenantsIdentifiers();
     }
 
-    @GetMapping("/{featureName}")
-    public FeatureInfo getFeatureToggle (@PathVariable String featureName,
+    @GetMapping("/{featureId}")
+    public FeatureInfo getFeatureToggle (@PathVariable String featureId,
                                          @RequestParam(defaultValue = TenantIdentifierService.DEFAULT) String tenant)
     {
         return ftService.getFeature(
-            featureName,
+            featureId,
             tenant).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
     }
 }
