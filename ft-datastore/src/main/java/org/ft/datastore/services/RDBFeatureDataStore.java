@@ -62,7 +62,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
             throw FeatureToggleException.APP_NOT_REGISTERED;
         }
 
-        Feature f = createIfMissing(feature);
+        Feature f = createOrUpdateFeature(feature);
         FeatureStatus featureStatus = createStatusIfMissing(feature, f);
         return Optional.ofNullable(mapper(featureStatus));
     }
@@ -94,21 +94,22 @@ public class RDBFeatureDataStore implements FeatureDataStore
         });
     }
 
-    private Feature createOrUpdateFeature (FeatureInfo feature, App app)
+    private Feature createOrUpdateFeature (FeatureInfo feature)
     {
         Optional<Feature> f = featureRepository.findById(feature.getId());
-        if(f.isPresent())
-        {
-            Feature featureToUpdate = f.get();
-            featureToUpdate.setName(feature.getName());
-            featureToUpdate.setGroupName(feature.getGroupName());
-            featureToUpdate.setEnableOn(feature.getEnableOn());
-            featureToUpdate.setDescription(feature.getDescription());
-            featureToUpdate.setPhase(feature.getPhase());
+        Feature fn;
+        if(f.isPresent()) {
+            fn = f.get();
+            fn.setName(feature.getName());
+            fn.setDescription(feature.getDescription());
+            fn.setGroupName(feature.getGroupName());
+            fn.setEnableOn(feature.getEnableOn());
+            fn.setDependsOn(feature.getDependsOn());
+            fn.setPhase(feature.getPhase());
 
         }else
         {
-            Feature fn = mapper(feature);
+            fn = mapper(feature);
             fn.setActive(true);
         }
         return featureRepository.save(fn);
