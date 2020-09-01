@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  ft-server:
+    image: dcodealpha/ft-server:latest
+    ports:
+      - 8110:8110
+    environment:
+      - DB_URL=jdbc:postgresql://ft-postgres:5432/ft_boot
+      - DB_USERNAME=ft_admin
+      - DB_PASSWORD=ft_admin
+      - DB_NAME=ft_boot
+      - spring.feature-toggle.server.deployment-phase=dev
+    depends_on:
+      - ft-postgres
+    networks:
+      - ft
+
+  ft-client-01:
+    image: dcodealpha/ft-sample-client:latest
+    ports:
+      - 8111:8111
+    environment:
+      - spring.feature-toggle.client.url=http://ft-server:8110
+      - spring.feature-toggle.client.deployment-phase=dev
+    depends_on:
+      - ft-server
+    networks:
+      - ft
+
+  ft-client-02:
+    image: dcodealpha/ft-sample-client-02:latest
+    ports:
+      - 8112:8112
+    environment:
+      - spring.feature-toggle.client.url=http://ft-server:8110
+      - spring.feature-toggle.client.deployment-phase=prod
+    depends_on:
+      - ft-server
+    networks:
+      - ft
+
+  ft-postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=ft_admin
+      - POSTGRES_USER=ft_admin
+      - POSTGRES_DB=ft_boot
+    networks:
+      - ft
+
+networks:
+  ft:
+    external: true
