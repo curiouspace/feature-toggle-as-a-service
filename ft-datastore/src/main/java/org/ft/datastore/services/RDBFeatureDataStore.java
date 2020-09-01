@@ -2,6 +2,7 @@ package org.ft.datastore.services;
 
 import lombok.AllArgsConstructor;
 import org.ft.core.api.model.FeatureInfo;
+import org.ft.core.api.model.Phase;
 import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.services.FeatureDataStore;
 import org.ft.core.services.FeaturePropertyValidator;
@@ -41,17 +42,18 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public Optional<FeatureInfo> getFeature (String featureId, String tenant)
+    public Optional<FeatureInfo> getFeature (String featureId, String tenant, Phase phase)
     {
-        return Optional.ofNullable(mapper(featureStatusRepository.getFeatureStatus(
+        return Optional.ofNullable(mapper(featureStatusRepository.getFeatureStatusByPhase(
             featureId,
-            tenant).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND)));
+            tenant,
+            phase).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND)));
     }
 
     @Override
-    public List<FeatureInfo> getFeatures (String tenant)
+    public List<FeatureInfo> getFeatures (String tenant, Phase phase)
     {
-        return featureStatusRepository.getFeatureStatus(tenant).stream().map(this::mapper).collect(
+        return featureStatusRepository.getFeatureStatusByTenant(tenant, phase).stream().map(this::mapper).collect(
             Collectors.toList());
     }
 
@@ -85,7 +87,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     public FeatureStatus createStatusIfMissing (FeatureInfo info, Feature feature)
     {
-        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatus(feature.getId(), info.getTenantIdentifier());
+        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatusByTenant(feature.getId(), info.getTenantIdentifier());
         return f.orElseGet(() -> {
             FeatureStatus featureStatus = FeatureStatus.builder().enabled(info.isEnabled()).feature(
                 feature).tenantIdentifier(info.getTenantIdentifier()).build();

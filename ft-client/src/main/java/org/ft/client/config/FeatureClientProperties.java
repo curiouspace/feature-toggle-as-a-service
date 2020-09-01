@@ -14,8 +14,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ConfigurationProperties(prefix = "spring.feature-toggle")
-public class FeatureProperties
+@ConfigurationProperties(prefix = "spring.feature-toggle.client")
+public class FeatureClientProperties
 {
     private String url;
     private String packageScan;

@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { FeatureToggleService } from './../../service/feature-toggle.service';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,8 +17,14 @@ export class FeatureToggleComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'description', 'groupName', 'phase', 'appName', 'enabled'];
   dataSource = new MatTableDataSource(this.features);
+  phase;
 
-  constructor(private featureToggleService: FeatureToggleService) { }
+  constructor(private featureToggleService: FeatureToggleService,
+              private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.phase = params.phase;
+    });
+  }
 
   ngOnInit() {
     this.featureToggleService.getAllTenents().subscribe(res => {
@@ -27,8 +34,8 @@ export class FeatureToggleComponent implements OnInit {
 
   tenantSelected(tenant) {
     console.log(tenant.value);
-    this.featureToggleService.getFeaturesForTenant(tenant.value).subscribe(res => {
-      this.features = res;
+    this.featureToggleService.getFeaturesForTenant(tenant.value, this.phase).subscribe((res: any) => {
+      this.features = res.features;
       this.selectedTenant = tenant.value;
       this.dataSource = new MatTableDataSource(this.features);
     });

@@ -1,0 +1,24 @@
+body {
+    display: block;
+    margin: 0;
+}
+.header {
+    width: 100%;
+    background: #354a5f;
+    padding: 0.1em 1em;
+    color: white;
+}
+.feature-content {
+    display: flex;
+}
+.ft-card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: min-content;
+    height: 5em;
+    margin: 1em;
+    text-align: center;
+}
+.content {
+  padding: 2px 16px;
+}

@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Builder
-@EnableConfigurationProperties(FeatureProperties.class)
+@EnableConfigurationProperties(FeatureClientProperties.class)
 @ComponentScan("org.ft.client")
 public class FeatureToggleConfiguration {
 
-    private FeatureProperties featureProperties;
+    private FeatureClientProperties featureClientProperties;
 
     @Bean
     @ConditionalOnMissingBean

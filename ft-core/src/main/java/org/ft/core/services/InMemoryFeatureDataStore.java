@@ -1,6 +1,7 @@
 package org.ft.core.services;
 
 import org.ft.core.api.model.FeatureInfo;
+import org.ft.core.api.model.Phase;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public Optional<FeatureInfo> getFeature (String featureId, String tenant)
+    public Optional<FeatureInfo> getFeature (String featureId, String tenant, Phase phase)
     {
         throw new NotImplementedException();
     }
 
     @Override
-    public List<FeatureInfo> getFeatures (String tenant)
+    public List<FeatureInfo> getFeatures (String tenant, Phase phase)
     {
         throw new NotImplementedException();
     }
