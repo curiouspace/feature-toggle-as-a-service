@@ -10,6 +10,7 @@
 		<module>ft-client-spring-boot-starter</module>
 		<module>ft-server-ui</module>
 		<module>ft-samples</module>
+        <module>ft-jira-integration</module>
 		<module>ft-server</module>
 	</modules>
     <parent>
