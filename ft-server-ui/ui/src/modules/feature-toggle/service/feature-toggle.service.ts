@@ -1,6 +1,6 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,13 @@ export class FeatureToggleService {
     return this.http.get(environment.baseUrl + '/features/tenants');
   }
 
-  public getFeaturesForTenant(tenant) {
-    return this.http.get(`${environment.baseUrl}/features?tenant=${tenant}`);
+  public getFeaturesForTenant(tenant: string, phase: string) {
+    const requestParams: HttpParams = new HttpParams()
+    .set('tenant', tenant)
+    .set('phase', phase);
+    return this.http.get(`${environment.baseUrl}/features`, {
+      params: requestParams
+    });
   }
 
   updateFeatureStatus(checked: any, name: any, tenant: string) {
