@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -23,14 +22,13 @@ public class TenantService
     @PostMapping
     public TenantResponse createTenant (@RequestBody TenantInfo tenantInfo)
     {
-        rdbTenantStore.addTenant(tenantInfo.getId(), tenantInfo.getName());
-        return new TenantResponse(Collections.singletonList(tenantInfo));
+        rdbTenantStore.addTenant(tenantInfo);
+        return TenantResponse.builder().tenantInfoList(Collections.singletonList(tenantInfo)).build();
     }
 
     @GetMapping
-    public TenantResponse getAll ()
+    public TenantResponse getAllTenants ()
     {
-        List<TenantInfo> tenantInfoList = rdbTenantStore.getAll();
-        return new TenantResponse(tenantInfoList);
+        return TenantResponse.builder().tenantInfoList(rdbTenantStore.getAll()).build();
     }
 }

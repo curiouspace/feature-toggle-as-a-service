@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TenantStore
 {
-    void  addTenant(String tenantId , String tenantName);
+    void addTenant (TenantInfo tenantInfo);
 
     List<TenantInfo> getAll ();
 

@@ -40,18 +40,11 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     @Override
     public Optional<FeatureInfo> createOrUpdate (FeatureInfo feature)
     {
-         throw new NotImplementedException();
-    }
-
-
-    @Override
-    public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)
-    {
         throw new NotImplementedException();
     }
 
     @Override
-    public Optional<FeatureInfo> update (FeatureInfo feature)
+    public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)
     {
         throw new NotImplementedException();
     }
@@ -63,7 +56,7 @@ public class InMemoryFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public List<String> getAllTenantsIdentifiers ()
+    public void syncFeaturesForTenant (String tenantId)
     {
         throw new NotImplementedException();
     }
