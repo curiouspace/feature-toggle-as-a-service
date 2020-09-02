@@ -56,7 +56,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public void disableForAll (List<String> featureIds)
     {
-        featureStatusRepository.updateFeatureStatusForAll(featureIds, true);
+        featureStatusRepository.updateFeatureStatusForAll(featureIds, false);
     }
 
     @Override
