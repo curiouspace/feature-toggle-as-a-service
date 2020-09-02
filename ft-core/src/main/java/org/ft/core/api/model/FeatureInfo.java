@@ -24,7 +24,6 @@ public class FeatureInfo
     private String description;
     private String groupName = "DEFAULT";
     private Phase phase = Phase.DEV;
-    private String tenantIdentifier;
     private LocalDate enableOn;
     private Set<String> dependsOn;
 

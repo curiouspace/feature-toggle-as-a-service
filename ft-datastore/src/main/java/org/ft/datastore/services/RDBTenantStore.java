@@ -7,8 +7,8 @@ import org.ft.datastore.models.Tenant;
 import org.ft.datastore.repository.TenantRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -17,25 +17,34 @@ public class RDBTenantStore implements TenantStore
     private TenantRepository tenantRepository;
 
     @Override
-    public void addTenant (String tenantId, String tenantName)
+    public void addTenant (TenantInfo tenantInfo)
     {
-        tenantRepository.save(new Tenant(tenantId, tenantName));
+        Tenant tenant = mapper(tenantInfo);
+        tenant.setActive(true);
+        tenantRepository.save(tenant);
     }
 
     @Override
     public List<TenantInfo> getAll ()
     {
         List<Tenant> tenantList = tenantRepository.findAll();
-        List<TenantInfo> tenantInfoList = new ArrayList<>();
-        tenantList.forEach(it -> tenantInfoList.add(new TenantInfo(it.getId(), it.getName())));
-
-        return tenantInfoList;
+        return tenantList.stream().map(this::mapper).collect(Collectors.toList());
     }
 
     @Override
     public List<String> getAllTenantIds ()
     {
-        return tenantRepository.getAllTenantIdentifiers();
+        return tenantRepository.getAllTenantIds();
     }
 
+
+    public TenantInfo mapper (Tenant tenant)
+    {
+        return TenantInfo.builder().id(tenant.getId()).name(tenant.getName()).build();
+    }
+
+    public Tenant mapper (TenantInfo tenant)
+    {
+        return Tenant.builder().id(tenant.getId()).name(tenant.getName()).build();
+    }
 }

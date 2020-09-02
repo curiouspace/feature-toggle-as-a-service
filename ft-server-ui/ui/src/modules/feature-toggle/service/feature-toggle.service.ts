@@ -11,7 +11,7 @@ export class FeatureToggleService {
 
 
   public getAllTenents() {
-    return this.http.get(environment.baseUrl + '/features/tenants');
+    return this.http.get(environment.baseUrl + '/tenants');
   }
 
   public getFeaturesForTenant(tenant: string, phase: string) {

@@ -17,19 +17,19 @@ import java.util.Optional;
 @Repository
 public interface FeatureStatusRepository extends JpaRepository<FeatureStatus, Long>
 {
-    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantIdentifier = :tenantIdentifier and f.feature.phase >= :phase")
-    Optional<FeatureStatus> getFeatureStatusByPhase (String featureId, String tenantIdentifier, Phase phase);
+    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantId = :tenantId and f.feature.phase >= :phase")
+    Optional<FeatureStatus> getFeatureStatusByPhase (String featureId, String tenantId, Phase phase);
 
-    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantIdentifier = :tenantIdentifier")
-    Optional<FeatureStatus> getFeatureStatusByTenant (String featureId, String tenantIdentifier);
+    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantId = :tenantId")
+    Optional<FeatureStatus> getFeatureStatusByTenant (String featureId, String tenantId);
 
-    @Query("Select f from FeatureStatus f where f.tenantIdentifier = :tenantIdentifier and f.feature.phase >= :phase order by f.feature.id")
-    List<FeatureStatus> getFeatureStatusByTenant (String tenantIdentifier, Phase phase);
+    @Query("Select f from FeatureStatus f where f.tenantId = :tenantId and f.feature.phase >= :phase order by f.feature.id")
+    List<FeatureStatus> getFeatureStatusByTenant (String tenantId, Phase phase);
 
     @Modifying
     @Transactional
-    @Query("update FeatureStatus f set f.enabled = :enabled where f.feature.id in (select fe.id from Feature fe where fe.id = :featureId) and f.tenantIdentifier = :tenantIdentifier")
-    void updateFeatureStatus (String featureId, String tenantIdentifier, Boolean enabled);
+    @Query("update FeatureStatus f set f.enabled = :enabled where f.feature.id in (select fe.id from Feature fe where fe.id = :featureId) and f.tenantId = :tenantId")
+    void updateFeatureStatus (String featureId, String tenantId, Boolean enabled);
 
 
 }

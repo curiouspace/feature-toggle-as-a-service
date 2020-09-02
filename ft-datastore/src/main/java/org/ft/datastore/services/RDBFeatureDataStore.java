@@ -3,15 +3,18 @@ package org.ft.datastore.services;
 import lombok.AllArgsConstructor;
 import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.api.model.Phase;
+import org.ft.core.api.model.TenantInfo;
 import org.ft.core.exceptions.FeatureToggleException;
 import org.ft.core.services.FeatureDataStore;
 import org.ft.core.services.FeaturePropertyValidator;
+import org.ft.core.services.TenantStore;
 import org.ft.datastore.models.Feature;
 import org.ft.datastore.models.FeatureStatus;
 import org.ft.datastore.repository.FeatureStatusRepository;
 import org.ft.datastore.repository.FeatureToggleRepository;
-import org.ft.datastore.repository.TenantRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +33,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private FeaturePropertyValidator featurePropertyValidator;
 
-    private RDBTenantStore rdbTenantStore;
+    private TenantStore tenantStore;
 
     @Override
     public void enable (String featureId, String tenant)
@@ -68,8 +71,8 @@ public class RDBFeatureDataStore implements FeatureDataStore
         }
 
         Feature f = createOrUpdateFeature(feature);
-        FeatureStatus featureStatus = createStatusIfMissing(feature, f);
-        return Optional.ofNullable(mapper(featureStatus));
+        createFeatureStatusForTenants(f);
+        return Optional.of(feature);
     }
 
     @Override
@@ -79,21 +82,23 @@ public class RDBFeatureDataStore implements FeatureDataStore
             Optional::get).collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<FeatureInfo> update (FeatureInfo feature)
-    {
-        if (feature.getId() != null && !feature.getId().isEmpty()) {
-            throw FeatureToggleException.FEATURE_NOT_FOUND;
+    private void createFeatureStatusForTenants(Feature feature) {
+        List<TenantInfo> tenants = tenantStore.getAll();
+        for (TenantInfo tenant: tenants) {
+            createStatusIfMissing(tenant, feature);
         }
-        return createOrUpdate(feature);
     }
 
-    public FeatureStatus createStatusIfMissing (FeatureInfo info, Feature feature)
+    public FeatureStatus createStatusIfMissing (TenantInfo tenant, Feature feature)
     {
-        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatusByTenant(feature.getId(), info.getTenantIdentifier());
+        Optional<FeatureStatus> f = featureStatusRepository.getFeatureStatusByTenant(
+            feature.getId(),
+            tenant.getId());
         return f.orElseGet(() -> {
-            FeatureStatus featureStatus = FeatureStatus.builder().enabled(info.isEnabled()).feature(
-                feature).tenantIdentifier(info.getTenantIdentifier()).build();
+            FeatureStatus featureStatus = FeatureStatus.builder()
+                .enabled(false)
+                .feature(feature)
+                .tenantId(tenant.getId()).build();
             featureStatus.setActive(true);
             return featureStatusRepository.save(featureStatus);
         });
@@ -120,18 +125,10 @@ public class RDBFeatureDataStore implements FeatureDataStore
         return featureRepository.save(fn);
     }
 
-
-
     @Override
     public void delete (String featureId)
     {
         featureRepository.deactivateFeature(featureId);
-    }
-
-    @Override
-    public List<String> getAllTenantsIdentifiers ()
-    {
-        return rdbTenantStore.getAllTenantIds();
     }
 
     private Feature mapper (FeatureInfo feature)
@@ -149,6 +146,9 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private FeatureInfo mapper (FeatureStatus featureStatus)
     {
+        if(featureStatus == null) {
+            return null;
+        }
         Feature feature = featureStatus.getFeature();
         return FeatureInfo.builder()
             .id(feature.getId())
@@ -156,9 +156,21 @@ public class RDBFeatureDataStore implements FeatureDataStore
             .phase(feature.getPhase())
             .description(feature.getDescription())
             .enabled(featureStatus.isEnabled())
-            .tenantIdentifier(featureStatus.getTenantIdentifier())
             .enableOn(featureStatus.getFeature().getEnableOn())
             .dependsOn(featureStatus.getFeature().getDependsOn())
             .groupName(feature.getGroupName()).build();
     }
+
+    @Override
+    @Transactional(propagation= Propagation.REQUIRES_NEW)
+    public void syncFeaturesForTenant (String tenantId) {
+        List<Feature> featureList = featureRepository.findAll();
+        featureList.forEach( feature -> {
+            FeatureStatus featureStatus = FeatureStatus.builder().enabled(false).feature(
+                feature).tenantId(tenantId).build();
+            featureStatus.setActive(true);
+            featureStatusRepository.save(featureStatus);
+        });
+    }
+
 }
