@@ -48,6 +48,18 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
+    public void enableForAll (List<String> featureIds)
+    {
+        featureStatusRepository.updateFeatureStatusForAll(featureIds, true);
+    }
+
+    @Override
+    public void disableForAll (List<String> featureIds)
+    {
+        featureStatusRepository.updateFeatureStatusForAll(featureIds, false);
+    }
+
+    @Override
     public Optional<FeatureInfo> getFeature (String featureId, String tenant, Phase phase)
     {
         return Optional.ofNullable(mapper(featureStatusRepository.getFeatureStatusByPhase(
@@ -172,5 +184,4 @@ public class RDBFeatureDataStore implements FeatureDataStore
             featureStatusRepository.save(featureStatus);
         });
     }
-
 }

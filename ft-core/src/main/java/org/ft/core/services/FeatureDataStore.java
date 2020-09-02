@@ -15,6 +15,10 @@ public interface FeatureDataStore
 
     void disable (String featureId, String tenant);
 
+    void enableForAll (List<String> featureIds);
+
+    void disableForAll (List<String> featureIds);
+
     Optional<FeatureInfo> getFeature (String featureId, String tenant, Phase phase);
 
     List<FeatureInfo> getFeatures (String tenant, Phase phase);

@@ -16,9 +16,8 @@ import java.util.List;
 @Repository
 public interface FeatureToggleRepository extends JpaRepository<Feature, String>
 {
-
-    @Query("Select f from Feature f where f.enableOn = :enableOn")
-    List<Feature> getFeatureByActivationDate (LocalDate enableOn);
+    @Query("Select f.id from Feature f where f.enableOn = :enableOn")
+    List<String> getFeatureIdsByActivationDate (LocalDate enableOn);
 
     @Modifying
     @Transactional
