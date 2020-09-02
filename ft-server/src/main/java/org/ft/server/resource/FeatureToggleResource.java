@@ -28,6 +28,7 @@ public class FeatureToggleResource
 {
     private FeatureDataStore ftService;
 
+
     @PostMapping
     public FeatureInfo createFeature (@RequestBody FeatureInfo featureInfo)
     {

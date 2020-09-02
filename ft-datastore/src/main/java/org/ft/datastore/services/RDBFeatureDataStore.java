@@ -10,6 +10,7 @@ import org.ft.datastore.models.Feature;
 import org.ft.datastore.models.FeatureStatus;
 import org.ft.datastore.repository.FeatureStatusRepository;
 import org.ft.datastore.repository.FeatureToggleRepository;
+import org.ft.datastore.repository.TenantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,16 +30,18 @@ public class RDBFeatureDataStore implements FeatureDataStore
 
     private FeaturePropertyValidator featurePropertyValidator;
 
+    private RDBTenantStore rdbTenantStore;
+
     @Override
     public void enable (String featureId, String tenant)
     {
-        featureRepository.updateFeatureStatus(featureId, tenant, true);
+        featureStatusRepository.updateFeatureStatus(featureId, tenant, true);
     }
 
     @Override
     public void disable (String featureId, String tenant)
     {
-        featureRepository.updateFeatureStatus(featureId, tenant, false);
+        featureStatusRepository.updateFeatureStatus(featureId, tenant, false);
     }
 
     @Override
@@ -128,7 +131,7 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public List<String> getAllTenantsIdentifiers ()
     {
-        return featureStatusRepository.getAllTenantIdentifiers();
+        return rdbTenantStore.getAllTenantIds();
     }
 
     private Feature mapper (FeatureInfo feature)

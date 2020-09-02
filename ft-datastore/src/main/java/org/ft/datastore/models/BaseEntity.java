@@ -19,5 +19,5 @@ import java.io.Serializable;
 @Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
 public class BaseEntity implements Serializable
 {
-    private boolean active;
+    private boolean active = Boolean.TRUE;
 }

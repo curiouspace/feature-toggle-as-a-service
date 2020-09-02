@@ -9,4 +9,8 @@ public interface TenantStore
     void  addTenant(String tenantId , String tenantName);
 
     List<TenantInfo> getAll ();
+
+    List<String> getAllTenantIds ();
+
+
 }

@@ -27,11 +27,15 @@ public class RDBTenantStore implements TenantStore
     {
         List<Tenant> tenantList = tenantRepository.findAll();
         List<TenantInfo> tenantInfoList = new ArrayList<>();
-        tenantList.forEach(it -> {
-            tenantInfoList.add(new TenantInfo(it.getId(), it.getName()));
-        });
+        tenantList.forEach(it -> tenantInfoList.add(new TenantInfo(it.getId(), it.getName())));
 
         return tenantInfoList;
+    }
+
+    @Override
+    public List<String> getAllTenantIds ()
+    {
+        return tenantRepository.getAllTenantIdentifiers();
     }
 
 }
