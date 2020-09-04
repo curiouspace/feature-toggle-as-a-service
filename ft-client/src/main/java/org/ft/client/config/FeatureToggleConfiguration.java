@@ -1,11 +1,7 @@
 package org.ft.client.config;
 
 import lombok.Builder;
-import org.ft.client.service.DefaultTenantIdentifierService;
-import org.ft.core.services.TenantIdentifierService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,10 +15,4 @@ import org.springframework.context.annotation.Configuration;
 public class FeatureToggleConfiguration {
 
     private FeatureClientProperties featureClientProperties;
-
-    @Bean
-    @ConditionalOnMissingBean
-    TenantIdentifierService getTenantIdentifierService() {
-        return new DefaultTenantIdentifierService();
-    }
 }

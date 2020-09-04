@@ -21,6 +21,6 @@ public class FeatureStatus extends IdEntity implements Serializable
 {
     @ManyToOne
     private Feature feature;
-    private String tenantIdentifier;
+    private String tenantId;
     private boolean enabled;
 }

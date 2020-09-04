@@ -11,9 +11,13 @@ import java.util.Optional;
  */
 public interface FeatureDataStore
 {
-    void enable(String featureId, String tenant);
+    void enable (String featureId, String tenant);
 
-    void disable(String featureId, String tenant);
+    void disable (String featureId, String tenant);
+
+    void enableForAll (List<String> featureIds);
+
+    void disableForAll (List<String> featureIds);
 
     Optional<FeatureInfo> getFeature (String featureId, String tenant, Phase phase);
 
@@ -23,9 +27,7 @@ public interface FeatureDataStore
 
     List<FeatureInfo> createOrUpdate (List<FeatureInfo> features);
 
-    Optional<FeatureInfo> update(FeatureInfo feature);
+    void delete (String featureId);
 
-    void delete(String featureId);
-
-    List<String> getAllTenantsIdentifiers ();
+    void syncFeaturesForTenant (String tenantId);
 }

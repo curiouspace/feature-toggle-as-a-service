@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 
@@ -21,6 +22,7 @@ import javax.sql.DataSource;
 @ComponentScan("org.ft")
 @EntityScan("org.ft.datastore")
 @EnableJpaRepositories("org.ft.datastore")
+@EnableScheduling
 public class FeatureDataStoreConfig
 {
     @Bean

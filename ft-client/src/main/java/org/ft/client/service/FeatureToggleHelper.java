@@ -2,7 +2,7 @@ package org.ft.client.service;
 
 import lombok.AllArgsConstructor;
 import org.ft.client.annotations.Feature;
-import org.ft.client.exception.ParsingFeatureEnumFailed;
+import org.ft.client.exception.ParseFeatureEnumException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,14 +14,14 @@ import javax.annotation.PostConstruct;
 @Component
 public class FeatureToggleHelper
 {
-    private FeatureToggleService fts;
+    private FeatureToggleClient fts;
 
-    private static FeatureToggleService featureToggleService;
+    private static FeatureToggleClient featureToggleClient;
 
     @PostConstruct
     private void init ()
     {
-        FeatureToggleHelper.featureToggleService = this.fts;
+        FeatureToggleHelper.featureToggleClient = this.fts;
     }
 
     public static <T extends Enum> boolean isFeatureEnabled (T feature)
@@ -29,11 +29,11 @@ public class FeatureToggleHelper
         try {
             Feature ft = feature.getClass().getField(feature.name()).getAnnotation(
                 Feature.class);
-            String toggleName = ft.name();
-            return featureToggleService.getFeatureToggle(toggleName).isEnabled();
+            String featureId = ft.id();
+            return featureToggleClient.getFeature(featureId).isEnabled();
         }
         catch (NoSuchFieldException e) {
-            throw new ParsingFeatureEnumFailed(feature.name() + " does not exist", e);
+            throw new ParseFeatureEnumException(feature.name() + " does not exist", e);
         }
     }
 }

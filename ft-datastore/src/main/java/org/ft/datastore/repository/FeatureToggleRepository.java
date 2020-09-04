@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Prajwal Das
@@ -14,11 +16,8 @@ import javax.transaction.Transactional;
 @Repository
 public interface FeatureToggleRepository extends JpaRepository<Feature, String>
 {
-
-    @Modifying
-    @Transactional
-    @Query("update FeatureStatus f set f.enabled = :enabled where f.feature.id in (select fe.id from Feature fe where fe.id = :featureId) and f.tenantIdentifier = :tenantIdentifier")
-    void updateFeatureStatus (String featureId, String tenantIdentifier, Boolean enabled);
+    @Query("Select f.id from Feature f where f.enableOn = :enableOn")
+    List<String> getFeatureIdsByActivationDate (LocalDate enableOn);
 
     @Modifying
     @Transactional

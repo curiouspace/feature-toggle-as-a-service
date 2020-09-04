@@ -3,9 +3,11 @@ package org.ft.datastore.repository;
 import org.ft.core.api.model.Phase;
 import org.ft.datastore.models.FeatureStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,15 +17,22 @@ import java.util.Optional;
 @Repository
 public interface FeatureStatusRepository extends JpaRepository<FeatureStatus, Long>
 {
-    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantIdentifier = :tenantIdentifier and f.feature.phase >= :phase")
-    Optional<FeatureStatus> getFeatureStatusByPhase (String featureId, String tenantIdentifier, Phase phase);
+    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantId = :tenantId and f.feature.phase >= :phase")
+    Optional<FeatureStatus> getFeatureStatusByPhase (String featureId, String tenantId, Phase phase);
 
-    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantIdentifier = :tenantIdentifier")
-    Optional<FeatureStatus> getFeatureStatusByTenant (String featureId, String tenantIdentifier);
+    @Query("Select f from FeatureStatus f where f.feature.id = :featureId and f.tenantId = :tenantId")
+    Optional<FeatureStatus> getFeatureStatusByTenant (String featureId, String tenantId);
 
-    @Query("Select f from FeatureStatus f where f.tenantIdentifier = :tenantIdentifier and f.feature.phase >= :phase order by f.feature.id")
-    List<FeatureStatus> getFeatureStatusByTenant (String tenantIdentifier, Phase phase);
+    @Query("Select f from FeatureStatus f where f.tenantId = :tenantId and f.feature.phase >= :phase order by f.feature.id")
+    List<FeatureStatus> getFeatureStatusByTenant (String tenantId, Phase phase);
 
-    @Query("Select distinct f.tenantIdentifier from FeatureStatus f where f.active = true order by f.tenantIdentifier")
-    List<String> getAllTenantIdentifiers ();
+    @Modifying
+    @Transactional
+    @Query(value = "update feature_status set enabled = :enabled where feature_id = :featureId and tenant_id = :tenantId", nativeQuery = true)
+    void updateFeatureStatus (String featureId, String tenantId, Boolean enabled);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update feature_status set enabled = :enabled where feature_id in :featureIds", nativeQuery = true)
+    void updateFeatureStatusForAll (List<String> featureIds, Boolean enabled);
 }

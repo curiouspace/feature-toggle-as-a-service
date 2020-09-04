@@ -27,7 +27,6 @@ public class Feature extends BaseEntity implements Serializable
 {
     @Id
     private String id;
-
     private String name;
     private String description;
     private String groupName;
