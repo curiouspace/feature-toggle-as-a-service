@@ -1,7 +1,7 @@
-package org.ft.client.features;
+package org.ft.client.sample.features;
 
-import org.ft.client.annotations.Feature;
-import org.ft.client.annotations.FeatureToggles;
+import org.ft.client.sample.annotations.Feature;
+import org.ft.client.sample.annotations.FeatureToggles;
 
 /**
  * @author Prajwal Das
@@ -9,7 +9,7 @@ import org.ft.client.annotations.FeatureToggles;
 @FeatureToggles
 public enum SampleFeatures
 {
-    @Feature(id = "SCAP-76544", name = "FEATURE SCAP-76544", description = "Demo 08654", group = "D1", dependsOn = {"SCAP-34568", "SCAP-56543"})
+    @Feature(id = "SCAP-76544", name = "FEATURE SCAP-76544", description = "Demo 08654", group = "D1", dependsOn = { "SCAP-34568", "SCAP-56543"})
     SCAP_76544,
 
     @Feature(id = "SCAP-53246", name = "FEATURE SCAP-53246", description = "Demo Desc", group = "D2")

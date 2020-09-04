@@ -37,7 +37,16 @@ public class FeatureToggleJiraIntegration extends FeatureToggleIntegration
                 .name(issue.getSummary())
                 .groupName(issue.getProject().getKey())
                 .description(issue.getDescription())
-                .phase(Phase.DEV).build()
+                .phase(getPhase(issue)).build()
             ).collect(Collectors.toList());
+    }
+
+    private Phase getPhase(Issue issue) {
+        switch (issue.getStatus().getName()) {
+        case "Done":
+            return Phase.PROD;
+        default:
+            return Phase.DEV;
+        }
     }
 }

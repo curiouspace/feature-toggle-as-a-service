@@ -1,7 +1,7 @@
 package org.ft.samples.client.controller;
 
 import lombok.AllArgsConstructor;
-import org.ft.client.service.FeatureToggleClient;
+import org.ft.client.sample.service.FeatureToggleClient;
 import org.ft.core.response.FeatureToggleResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
