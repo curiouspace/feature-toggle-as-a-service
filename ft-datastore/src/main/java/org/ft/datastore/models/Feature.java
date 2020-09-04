@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.ft.core.api.model.Phase;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,6 +29,8 @@ public class Feature extends BaseEntity implements Serializable
     @Id
     private String id;
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String groupName;
     private LocalDate enableOn;
