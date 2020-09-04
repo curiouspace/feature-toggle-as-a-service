@@ -41,6 +41,11 @@
         </dependency>
         <dependency>
             <groupId>org.ft</groupId>
+            <artifactId>ft-jira-integration</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ft</groupId>
             <artifactId>ft-server-ui</artifactId>
             <version>${revision}</version>
         </dependency>
