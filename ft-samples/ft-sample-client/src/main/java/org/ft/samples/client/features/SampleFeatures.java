@@ -1,7 +1,7 @@
 package org.ft.samples.client.features;
 
-import org.ft.client.annotations.Feature;
-import org.ft.client.annotations.FeatureToggles;
+import org.ft.client.sample.annotations.Feature;
+import org.ft.client.sample.annotations.FeatureToggles;
 import org.ft.core.api.model.Phase;
 
 /**

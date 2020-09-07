@@ -1,7 +1,4 @@
-package org.ft.client.annotations;
-
-import org.ft.client.config.FeatureToggleConfiguration;
-import org.springframework.context.annotation.Import;
+package org.ft.client.sample.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,9 +9,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * @author Prajwal Das
  */
-@Import({ FeatureToggleConfiguration.class})
 @Target({ ElementType.TYPE})
 @Retention(RUNTIME)
-public @interface EnableFeatureToggleClient
+public @interface FeatureToggles
 {
 }

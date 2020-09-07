@@ -1,4 +1,4 @@
-package org.ft.client.exception;
+package org.ft.client.sample.exception;
 
 /**
  * @author Prajwal Das

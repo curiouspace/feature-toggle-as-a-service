@@ -1,4 +1,4 @@
-package org.ft.client.annotations;
+package org.ft.client.sample.annotations;
 
 import org.ft.core.api.model.Phase;
 
