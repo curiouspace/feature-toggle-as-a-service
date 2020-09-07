@@ -10,8 +10,8 @@ import org.ft.datastore.repository.FeatureStatusRepository;
 import org.ft.datastore.repository.FeatureToggleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -37,8 +37,7 @@ public class FeaturePropertyValidatorImpl implements FeaturePropertyValidator
             return false;
         }
 
-        List<String> featureIdList = featureToggleRepository.getDependentFeatureIds(
-            featureId);
+        Set<String> featureIdList = feature.get().getDependsOn();
         if (featureIdList != null) {
             for (String it : featureIdList) {
                 Optional<FeatureStatus> featureStatus = featureStatusRepository.getFeatureStatusByTenant(

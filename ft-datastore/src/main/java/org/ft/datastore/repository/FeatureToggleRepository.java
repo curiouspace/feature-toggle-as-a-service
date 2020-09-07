@@ -19,7 +19,7 @@ public interface FeatureToggleRepository extends JpaRepository<Feature, String>
     @Query("Select f.id from Feature f where f.enableOn = :enableOn")
     List<String> getFeatureIdsByActivationDate (LocalDate enableOn);
 
-    @Query("Select f.dependsOn from Feature f where where f.id = :featureId")
+    @Query("Select f.dependsOn from Feature f where f.id = :featureId")
     List<String> getDependentFeatureIds (String featureId);
 
     @Modifying
