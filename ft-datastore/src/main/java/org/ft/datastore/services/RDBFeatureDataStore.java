@@ -5,8 +5,9 @@ import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.api.model.Phase;
 import org.ft.core.api.model.TenantInfo;
 import org.ft.core.exceptions.FeatureToggleException;
+import org.ft.core.response.FeatureToggleResponse;
 import org.ft.core.services.FeatureDataStore;
-import org.ft.core.services.FeaturePropertyValidator;
+import org.ft.core.util.FeaturePropertyValidator;
 import org.ft.core.services.TenantStore;
 import org.ft.datastore.models.Feature;
 import org.ft.datastore.models.FeatureStatus;
@@ -16,9 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.ft.core.util.ErrorMessages.MANDATORY_PROPERTIES_NOT_SPECIFIED;
 
 /**
  * @author Prajwal Das
@@ -38,6 +42,11 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public void enable (String featureId, String tenant)
     {
+        if (!featurePropertyValidator.validateDependencyForFeatureEnablement(featureId,
+            tenant))
+        {
+            throw FeatureToggleException.ENABLEMENT_FAILED;
+        }
         featureStatusRepository.updateFeatureStatus(featureId, tenant, true);
     }
 
@@ -50,7 +59,12 @@ public class RDBFeatureDataStore implements FeatureDataStore
     @Override
     public void enableForAll (List<String> featureIds)
     {
-        featureStatusRepository.updateFeatureStatusForAll(featureIds, true);
+        tenantStore.getAll().forEach(tenantInfo -> {
+            featureIds.forEach(featureId -> {
+                enable(featureId,tenantInfo.getId());
+            });
+
+        });
     }
 
     @Override
@@ -76,22 +90,35 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
-    public Optional<FeatureInfo> createOrUpdate (FeatureInfo feature)
+    public FeatureToggleResponse createOrUpdate (FeatureInfo feature)
     {
         if ( !featurePropertyValidator.isValid(feature)) {
-            throw FeatureToggleException.APP_NOT_REGISTERED;
+            return FeatureToggleResponse.builder().
+                errorMsg(MANDATORY_PROPERTIES_NOT_SPECIFIED).build();
         }
 
         Feature f = createOrUpdateFeature(feature);
         createFeatureStatusForTenants(f);
-        return Optional.of(feature);
+        return FeatureToggleResponse.builder().features(
+            Collections.singletonList(feature)).build();
     }
 
     @Override
-    public List<FeatureInfo> createOrUpdate (List<FeatureInfo> features)
+    public FeatureToggleResponse createOrUpdate (List<FeatureInfo> features)
     {
-        return features.stream().map(this::createOrUpdate).filter(Optional::isPresent).map(
-            Optional::get).collect(Collectors.toList());
+        for(FeatureInfo featureInfo : features){
+            if ( !featurePropertyValidator.isValid(featureInfo)) {
+                return FeatureToggleResponse.builder().
+                    errorMsg(MANDATORY_PROPERTIES_NOT_SPECIFIED).build();
+            }else
+            {
+                Feature f = createOrUpdateFeature(featureInfo);
+                createFeatureStatusForTenants(f);
+            }
+        }
+
+        return FeatureToggleResponse.builder().features(features).build();
+
     }
 
     private void createFeatureStatusForTenants(Feature feature) {

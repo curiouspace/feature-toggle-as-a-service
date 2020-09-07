@@ -2,6 +2,7 @@ package org.ft.core.services;
 
 import org.ft.core.api.model.FeatureInfo;
 import org.ft.core.api.model.Phase;
+import org.ft.core.response.FeatureToggleResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +24,9 @@ public interface FeatureDataStore
 
     List<FeatureInfo> getFeatures (String tenant, Phase phase);
 
-    Optional<FeatureInfo> createOrUpdate (FeatureInfo feature);
+    FeatureToggleResponse createOrUpdate (FeatureInfo feature);
 
-    List<FeatureInfo> createOrUpdate (List<FeatureInfo> features);
+    FeatureToggleResponse createOrUpdate (List<FeatureInfo> features);
 
     void delete (String featureId);
 
