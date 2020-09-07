@@ -12,10 +12,19 @@ import java.util.List;
  * @author Prajwal Das
  */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeatureToggleResponse extends Response
 {
     private List<FeatureInfo> features;
+
+
+    @Builder
+    public FeatureToggleResponse (String errorMsg,
+                                  int statusCode,
+                                  List<FeatureInfo> features)
+    {
+        super(errorMsg, statusCode);
+        this.features = features;
+    }
 }

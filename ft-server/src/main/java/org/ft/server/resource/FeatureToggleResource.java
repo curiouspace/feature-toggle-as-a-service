@@ -27,15 +27,15 @@ public class FeatureToggleResource
 
 
     @PostMapping
-    public FeatureInfo createFeature (@RequestBody FeatureInfo featureInfo)
+    public FeatureToggleResponse createFeature (@RequestBody FeatureInfo featureInfo)
     {
-        return ftService.createOrUpdate(featureInfo).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
+        return ftService.createOrUpdate(featureInfo);
     }
 
     @PostMapping("/bulk")
     public FeatureToggleResponse createFeatures (@RequestBody FeatureTogglesRequest request)
     {
-        return FeatureToggleResponse.builder().features(ftService.createOrUpdate(request.getFeatures())).build();
+        return ftService.createOrUpdate(request.getFeatures());
     }
 
     @GetMapping
