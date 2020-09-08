@@ -15,7 +15,6 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class FeaturePropertyValidatorImpl implements FeaturePropertyValidator
 {
     private FeatureStatusRepository featureStatusRepository;
