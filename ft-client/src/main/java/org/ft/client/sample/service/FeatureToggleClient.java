@@ -39,6 +39,7 @@ public class FeatureToggleClient implements FeatureClient
         if(INSTANCE == null) {
             INSTANCE = new FeatureToggleClient(config);
         }
+        INSTANCE.init();
         return INSTANCE;
     }
 
