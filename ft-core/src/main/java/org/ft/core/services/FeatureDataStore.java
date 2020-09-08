@@ -31,4 +31,6 @@ public interface FeatureDataStore
     void delete (String featureId);
 
     void syncFeaturesForTenant (String tenantId);
+
+    void updateFetchCount(FeatureInfo featureInfo);
 }

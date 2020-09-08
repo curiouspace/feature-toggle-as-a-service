@@ -33,7 +33,12 @@ public interface FeatureStatusRepository extends JpaRepository<FeatureStatus, Lo
 
     @Modifying
     @Transactional
-    @Query(value = "update feature_status set enabled = :enabled where feature_id in :featureIds", nativeQuery = true)
+    @Query(value = "update feature_status set access_count = access_count+1 where feature.id = :feature_Id and tenant_id = :tenantId ", nativeQuery = true)
+    void updateFeatureFetchCount (String featureId, String tenantId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update feature_status set enabled = :enabled where feature.id in :featureIds", nativeQuery = true)
     void updateFeatureStatusForAll (List<String> featureIds, Boolean enabled);
 
     @Query("Select f from FeatureStatus f where f.feature.id IN (:featureIdList)and f.tenantId = :tenantId")
