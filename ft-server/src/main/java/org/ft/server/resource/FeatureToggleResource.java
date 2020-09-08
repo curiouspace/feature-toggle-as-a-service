@@ -76,9 +76,12 @@ public class FeatureToggleResource
                                          @RequestParam String tenant,
                                          @RequestParam Phase phase)
     {
-        return ftService.getFeature(
+        FeatureInfo featureInfo =  ftService.getFeature(
             featureId,
             tenant,
             phase).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
+
+        ftService.updateFetchCount(featureInfo);
+        return featureInfo;
     }
 }

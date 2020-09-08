@@ -23,4 +23,5 @@ public class FeatureStatus extends IdEntity implements Serializable
     private Feature feature;
     private String tenantId;
     private boolean enabled;
+    private Long accessCount;
 }

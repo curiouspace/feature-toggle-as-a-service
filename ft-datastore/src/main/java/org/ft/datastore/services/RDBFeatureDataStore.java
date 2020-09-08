@@ -83,6 +83,11 @@ public class RDBFeatureDataStore implements FeatureDataStore
     }
 
     @Override
+    public boolean updateFetchCount(FeatureInfo feature) {
+        return featureStatusRepository.updateFeatureFetchCount();
+    }
+
+    @Override
     public List<FeatureInfo> getFeatures (String tenant, Phase phase)
     {
         return featureStatusRepository.getFeatureStatusByTenant(tenant, phase).stream().map(this::mapper).collect(
