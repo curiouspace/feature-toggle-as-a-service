@@ -81,7 +81,7 @@ public class FeatureToggleResource
             tenant,
             phase).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND);
 
-        ftService.updateFetchCount(featureInfo);
+        ftService.updateFetchCount(featureId, tenant);
         return featureInfo;
     }
 }

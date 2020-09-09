@@ -33,7 +33,7 @@ public interface FeatureStatusRepository extends JpaRepository<FeatureStatus, Lo
 
     @Modifying
     @Transactional
-    @Query(value = "update feature_status set access_count = access_count+1 where feature.id = :feature_Id and tenant_id = :tenantId ", nativeQuery = true)
+    @Query(value = "update feature_status set access_count = access_count+1 where feature.id = :featureId and tenant_id = :tenantId ", nativeQuery = true)
     void updateFeatureFetchCount (String featureId, String tenantId);
 
     @Modifying

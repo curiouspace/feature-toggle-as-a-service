@@ -82,9 +82,8 @@ public class RDBFeatureDataStore implements FeatureDataStore
             phase).orElseThrow(() -> FeatureToggleException.FEATURE_NOT_FOUND)));
     }
 
-    @Override
-    public boolean updateFetchCount(FeatureInfo feature) {
-        return featureStatusRepository.updateFeatureFetchCount();
+    public void updateFetchCount(String featureId, String tenantId) {
+        featureStatusRepository.updateFeatureFetchCount(featureId, tenantId);
     }
 
     @Override
