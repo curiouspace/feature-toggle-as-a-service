@@ -35,4 +35,4 @@ API will be provided for enabling, disabling, viewing of feature toggle status.
 
 # Architecture Design
 
-![](https://github.com/DCode-Alpha/feature-toggle-service/blob/master/Architecture-Design.jpg)
+![](https://github.com/codecuriosity/feature-toggle-as-a-service/blob/master/Architecture-Design.jpg)
